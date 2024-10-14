@@ -1,0 +1,56 @@
+#version: '3.8'
+
+services:
+  flexreact-php:  # 여기를 'release'에서 'flexreact-php'로 변경
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: flexreact-php
+    ports:
+      - "8888:80"
+    networks:
+      - flexreact-php-network
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    volumes:
+      - ./app:/app
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      flexreact-php-mysql:
+        condition: service_healthy
+
+  flexreact-php-mysql:
+    image: mysql:8.0
+    container_name: flexreact-php-mysql
+    command: --default-authentication-plugin=mysql_native_password --server-id=1
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ./flexreact-php-mysql.cnf:/etc/mysql/conf.d/flexreact-php-mysql.cnf
+      - flexreact-php-mysql-data:/var/lib/mysql
+    ports:
+      - "3336:3306"
+    networks:
+      - flexreact-php-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  flexreact-php-network:
+    driver: bridge
+
+volumes:
+  flexreact-php-mysql-data:

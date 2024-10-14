@@ -1,0 +1,27 @@
+{
+    "name": "apmsoft/flexphp-banana",
+    "description": "PHP",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "http://flexphp.fancyupsoft.com",
+    "authors": [
+        {
+            "name": "Kim JongKwan",
+            "email": "apmsoft@gmail.com",
+            "homepage": "http://flexphp.fancyupsoft.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flex\\Banana\\Classes\\": "classes",
+            "Flex\\Banana\\Adapters\\": "adapters",
+            "Flex\\Banana\\Interfaces\\": "interfaces",
+            "Flex\\Banana\\Traits\\": "traits",
+            "Flex\\Banana\\Utils\\": "utils"
+        }
+    }
+}
