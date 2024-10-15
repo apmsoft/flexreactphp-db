@@ -32,7 +32,7 @@ docker-compose logs -f
 ##############
 # 접속 테스트
 ##############
-curl localhost:9111
+curl localhost:8888
 
 
 ##############
