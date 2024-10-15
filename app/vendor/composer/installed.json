@@ -2,8 +2,8 @@
     "packages": [
         {
             "name": "apmsoft/flexphp-banana",
-            "version": "dev-main",
-            "version_normalized": "dev-main",
+            "version": "v3.0.5",
+            "version_normalized": "3.0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apmsoft/flexphp-banana.git",
@@ -19,7 +19,6 @@
                 "php": ">=8.1"
             },
             "time": "2024-10-14T06:59:53+00:00",
-            "default-branch": true,
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -47,7 +46,7 @@
             "homepage": "http://flexphp.fancyupsoft.com",
             "support": {
                 "issues": "https://github.com/apmsoft/flexphp-banana/issues",
-                "source": "https://github.com/apmsoft/flexphp-banana/tree/main"
+                "source": "https://github.com/apmsoft/flexphp-banana/tree/v3.0.5"
             },
             "install-path": "../apmsoft/flexphp-banana"
         },

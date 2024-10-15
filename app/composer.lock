@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "25c2dde972891084865eaa074c7d8b5f",
+    "content-hash": "88fbe13b95c3b00837b200abd6178a97",
     "packages": [
         {
             "name": "apmsoft/flexphp-banana",
-            "version": "dev-main",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apmsoft/flexphp-banana.git",
@@ -23,7 +23,6 @@
             "require": {
                 "php": ">=8.1"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -50,7 +49,7 @@
             "homepage": "http://flexphp.fancyupsoft.com",
             "support": {
                 "issues": "https://github.com/apmsoft/flexphp-banana/issues",
-                "source": "https://github.com/apmsoft/flexphp-banana/tree/main"
+                "source": "https://github.com/apmsoft/flexphp-banana/tree/v3.0.5"
             },
             "time": "2024-10-14T06:59:53+00:00"
         },
@@ -881,9 +880,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "apmsoft/flexphp-banana": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {},
