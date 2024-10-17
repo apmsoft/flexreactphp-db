@@ -15,6 +15,8 @@ return array(
     'React\\Cache\\' => array($vendorDir . '/react/cache/src'),
     'React\\Async\\' => array($vendorDir . '/react/async/src'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
+    'My\\Topadm\\' => array($baseDir . '/topadm'),
+    'My\\Service\\' => array($baseDir . '/service'),
     'Flex\\Banana\\Utils\\' => array($vendorDir . '/apmsoft/flexphp-banana/utils'),
     'Flex\\Banana\\Traits\\' => array($vendorDir . '/apmsoft/flexphp-banana/traits'),
     'Flex\\Banana\\Interfaces\\' => array($vendorDir . '/apmsoft/flexphp-banana/interfaces'),

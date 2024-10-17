@@ -7,7 +7,8 @@
     },
     "autoload": {
         "psr-4": {
-
+            "My\\Service\\": "service",
+            "My\\Topadm\\": "topadm"
         }
     }
 }

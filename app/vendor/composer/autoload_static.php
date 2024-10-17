@@ -28,6 +28,11 @@ class ComposerStaticInite73dc694c94f11008ed6105762724fa7
         array (
             'Psr\\Http\\Message\\' => 17,
         ),
+        'M' => 
+        array (
+            'My\\Topadm\\' => 10,
+            'My\\Service\\' => 11,
+        ),
         'F' => 
         array (
             'Flex\\Banana\\Utils\\' => 18,
@@ -80,6 +85,14 @@ class ComposerStaticInite73dc694c94f11008ed6105762724fa7
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'My\\Topadm\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/topadm',
+        ),
+        'My\\Service\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/service',
         ),
         'Flex\\Banana\\Utils\\' => 
         array (

@@ -34,12 +34,12 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
         return  JsonEncoder::toJson( ["result"=>"true","msg"=>"Hello"] );
     });
 
-    // $r->addGroup('/v1', function (RouteCollector $r) use ($browser) 
-    // {
-    //     $r->addRoute('POST', '/bbs/notice', function(Requested $requested) use ($browser): string {
-    //         return  JsonEncoder::toJson( ["result"=>"true","msg"=>"Hello"] );
-    //     });
-    // });
+    $r->addGroup('/service', function (FastRoute\RouteCollector $r) use ($browser) 
+    {
+        $r->addRoute('GET', '/test', function(Requested $requested) use ($browser): string {
+            return  (new \My\Service\Test\Test())->do();
+        });
+    });
 });
 
 # $db = new DbMySqli("flexreact-php-mysql:test_db","test","test!@!@",3306);
