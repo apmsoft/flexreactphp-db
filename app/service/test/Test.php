@@ -15,7 +15,7 @@ class Test implements DoInterface {
         return JsonEncoder::toJson([
             "result" => "true",
             "msg" => sprintf(
-                "Test2 Time : %s ", ((new DateTimez("now"))->format('Y-m-d H:i:s'))
+                "Test Time : %s", ((new DateTimez("now"))->format('Y-m-d H:i:s'))
             )
         ]);
     }
