@@ -1,0 +1,23 @@
+{
+    "e_null": "Please enter",
+    "e_spaces": "Enter without spaces",
+    "e_enum": "No value found.",
+    "e_ctype_alnum": "Please enter only letters or numbers",
+    "e_same_repeat_string" : "You cannot enter more than %s consecutive characters.",
+    "e_number": "Enter only numbers",
+    "e_korean": "Cannot input Korean",
+    "e_string_length": "Enter %d~%d characters for length",
+    "e_etc_string": "You cannot enter any special characters other than the allowed special characters %s",
+    "e_chk_etc_string": "Please enter at least one special character",
+    "e_alphabet": "Please enter English (alphabet)",
+    "e_date": "Please enter the date correctly",
+    "e_time": "Enter the time accurately",
+    "e_date_period": "Enter the date period accurately",
+    "e_equals": "Does not match.",
+    "e_up_alphabet": "Please enter in uppercase letters",
+    "e_low_alphabet": "Please enter in lowercase letters",
+    "e_first_alphabet":"Please enter the first letter in English only",
+    "e_json":"Please enter data in JSON format",
+    "e_float": "Enter only numbers and decimal numbers",
+    "e_link_url": "Enter the URL address correctly"
+}

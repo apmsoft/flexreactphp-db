@@ -27,17 +27,14 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
     $r->addRoute('GET', '/', function(Requested $requested) use ($browser): string {
         return  JsonEncoder::toJson( ["result"=>"true","msg"=>"Hello"] );
     });
-    $r->addRoute('GET', '/favicon.ico', function(Requested $requested) use ($browser): string {
-        return  JsonEncoder::toJson( ["result"=>"true","msg"=>"Hello"] );
-    });
-    $r->addRoute('OPTIONS', '/', function(Requested $requested) use ($browser): string {
-        return  JsonEncoder::toJson( ["result"=>"true","msg"=>"Hello"] );
-    });
 
     $r->addGroup('/service', function (FastRoute\RouteCollector $r) use ($browser) 
     {
         $r->addRoute('GET', '/test', function(Requested $requested) use ($browser): string {
             return  (new \My\Service\Test\Test())->do();
+        });
+        $r->addRoute('GET', '/r', function(Requested $requested) use ($browser): string {
+            return  (new \My\Service\R\Reso($requested))->do();
         });
     });
 });
@@ -102,7 +99,7 @@ $http = new React\Http\HttpServer(
         {
             return new Response( 
                 status: 200, headers: ['Content-Type' => 'application/json'],
-                body: JsonEncoder::toJson(["result"=>"true","msg"=>"test"])
+                body: JsonEncoder::toJson(["result"=>"true","msg"=>"health"])
             );
         }
 
@@ -139,6 +136,10 @@ $http = new React\Http\HttpServer(
         # 리소스
         R::init($primaryLanguage ?? '');
         R::parser(__DIR__.'/res/values/sysmsg.json', 'sysmsg');
+        R::parser(__DIR__.'/res/values/strings.json', 'strings');
+        R::parser(__DIR__.'/res/values/arrays.json', 'arrays');
+        R::parser(__DIR__.'/res/values/tables.json', 'tables');
+        R::parser(__DIR__.'/res/values/numbers.json', 'numbers');
 
         return $next($request);
     },
