@@ -37,6 +37,13 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
             return  (new \My\Service\R\Reso($requested))->do();
         });
     });
+
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($browser) 
+    {
+        $r->addRoute('POST', '/list', function(Requested $requested) use ($browser): string {
+            return  (new \My\Service\Test\Db($requested))->doList();
+        });
+    });
 });
 
 # $db = new DbMySqli("flexreact-php-mysql:test_db","test","test!@!@",3306);
