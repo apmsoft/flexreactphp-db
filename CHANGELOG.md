@@ -6,6 +6,7 @@
 
 ### - 2024-10-17
 - 내 네임스페이스와 경로 composer.json 설정 및 라우터 실행 관련 업데이트 
+- My\Service\Test\Test class example update
 
 ### - 2024-10-15
 - router 및 middleware 단계 기본 설정
