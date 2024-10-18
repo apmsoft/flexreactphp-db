@@ -25,9 +25,10 @@ class Db extends DbMySqlAdapter implements ListInterface
     private TestEnum $testEnum;
 
     public function __construct(
-        private Requested $requested
-    ) { 
-        parent::__construct(new DbMySqli(dsn: "flexreact-php-mysql:test_db",user: "test",passwd: "test!@!@",port: 3306));
+        private Requested $requested,
+        DbMySqli $db
+    ) {
+        parent::__construct(db: $db);
 
         # Enum&Types 인스턴스 생성
         $this->testEnum = TestEnum::create();
@@ -47,7 +48,7 @@ class Db extends DbMySqlAdapter implements ListInterface
         }
 
         # model
-        $model = new Model($params );
+        $model = new Model($params);
         $model->total_record = 0; // 총레코드수
         $model->page         = $this->requested->page ?? 1;   // 현재페이지
         $model->page_count   = 10;  // 출력갯수
@@ -58,14 +59,19 @@ class Db extends DbMySqlAdapter implements ListInterface
         $model->total_record = $this->db->table(R::tables('test'))->total();
 
         # pageing
-        $paging = new Relation( $model->total_record, $model->page );
-        $relation = $paging->query( $model->page_count , $model->block_limit )->build()->paging();
+        $paging = new Relation( totalRecord: $model->total_record, page: $model->page );
+        $relation = $paging->query( pagecount: $model->page_count , blockLimit: $model->block_limit )->build()->paging();
 
         # query
         $rlt = $this->db->table(R::tables('test'))
-            ->orderBy('id DESC')
-                ->limit($paging->qLimitStart, $paging->qLimitEnd)
-                    ->query();
+            ->select(
+                TestEnum::ID(),
+                TestEnum::TITLE(),
+                TestEnum::SIGNDATE()
+            )
+            ->orderBy(TestEnum::ID().' DESC')
+            ->limit($paging->qLimitStart, $paging->qLimitEnd)
+            ->query();
         while ( $row = $rlt->fetch_assoc() )
         {
             // array push

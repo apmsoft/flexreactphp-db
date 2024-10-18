@@ -17,6 +17,7 @@ return array(
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'My\\Topadm\\' => array($baseDir . '/topadm'),
     'My\\Service\\' => array($baseDir . '/service'),
+    'My\\Columns\\' => array($baseDir . '/columns'),
     'Flex\\Banana\\Utils\\' => array($vendorDir . '/apmsoft/flexphp-banana/utils'),
     'Flex\\Banana\\Traits\\' => array($vendorDir . '/apmsoft/flexphp-banana/traits'),
     'Flex\\Banana\\Interfaces\\' => array($vendorDir . '/apmsoft/flexphp-banana/interfaces'),

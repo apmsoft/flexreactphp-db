@@ -1,0 +1,16 @@
+@HOST = http://localhost:8888
+@C_TYPE = application/json
+@H-Access-Token = a
+@H-Mananger-Token = b
+
+### TEST
+GET {{HOST}}/
+
+###
+GET {{HOST}}/service/test
+
+###
+GET {{HOST}}/service/r
+
+###
+POST {{HOST}}/db/list

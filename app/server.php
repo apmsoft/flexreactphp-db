@@ -6,9 +6,8 @@ use Flex\Banana\Classes\App;
 use Flex\Banana\Classes\Log;
 use Flex\Banana\Classes\R;
 use Flex\Banana\Classes\Json\JsonEncoder;
-use Flex\Banana\Classes\Date\DateTimez;
-use Flex\Banana\Classes\Db\DbMySqli;
 use Flex\Banana\Utils\Requested;
+use Flex\Banana\Classes\Db\DbMySqli;
 
 # autoload
 require __DIR__. '/vendor/autoload.php';
@@ -16,13 +15,15 @@ require __DIR__. '/vendor/autoload.php';
 # config 설정
 Log::init( Log::MESSAGE_ECHO );
 
-
 // 허용할 IP 주소 목록
 $allowedIps = ['192.168.65.1']; // 허용 IP 주소
 
-# router
+# class
 $browser = new React\Http\Browser();
-$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($browser)
+$db = new DbMySqli(dsn: DB_HOSTNAME, user: DB_USERID, passwd: DB_PASSWORD, port: DB_PORT);
+
+# router
+$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($browser, $db)
 {
     $r->addRoute('GET', '/', function(Requested $requested) use ($browser): string {
         return  JsonEncoder::toJson( ["result"=>"true","msg"=>"Hello"] );
@@ -38,15 +39,15 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
         });
     });
 
-    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($browser) 
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($browser, $db) 
     {
-        $r->addRoute('POST', '/list', function(Requested $requested) use ($browser): string {
-            return  (new \My\Service\Test\Db($requested))->doList();
+        $r->addRoute('POST', '/list', function(Requested $requested) use ($browser, $db): string {
+            return  (new \My\Service\Test\Db($requested, $db))->doList();
         });
     });
 });
 
-# $db = new DbMySqli("flexreact-php-mysql:test_db","test","test!@!@",3306);
+
 $handler = function (Psr\Http\Message\ServerRequestInterface $request) use ($dispatcher)
 {
     # 기본정보
@@ -77,7 +78,7 @@ $handler = function (Psr\Http\Message\ServerRequestInterface $request) use ($dis
             $deferred->resolve(new Response(status: 200, headers: ['Content-Type' => 'application/json'], body: $e->getMessage()));
         }
     })
-    ->otherwise(function ($e) use ($deferred){
+    ->catch(function ($e) use ($deferred){
         $err_msg = $e->getMessage();
         Log::e( $err_msg);
         $deferred->resolve(  new React\Promise\Promise(function ($resolve) use ($err_msg) {
