@@ -12,9 +12,19 @@ use Flex\Banana\Classes\Db\DbMySqli;
 # autoload
 require __DIR__. '/vendor/autoload.php';
 
-# config 설정
+# Log
 Log::init( Log::MESSAGE_ECHO );
 Log::setDebugs('i','d','v','w','e');
+
+# env
+define('DB_HOSTNAME', "flexreact-php-mysql:" . getenv('MYSQL_DATABASE'));
+define('DB_USERID', getenv('MYSQL_USER'));
+define('DB_PASSWORD', getenv('MYSQL_PASSWORD'));
+define('DB_PORT', 3306);
+
+Log::d('DB_HOSTNAME',DB_HOSTNAME);
+Log::d('DB_USERID',DB_USERID);
+Log::d('DB_PASSWORD',DB_PASSWORD);
 
 // 허용할 IP 주소 목록
 $allowedIps = ['192.168.65.1']; // 허용 IP 주소

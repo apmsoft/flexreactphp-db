@@ -1,9 +1,14 @@
 ## -project-name : flexreact-php-mysql
 ## -version-code : 1
-## -version-name : v0.1.1
+## -version-name : v0.1.2
 
 # Changelog
 
+# v0.1.2
+### - 2024-10-18
+- env php 삭제 및 .env 파일을 사용하도록 변경
+
+# v0.1.1
 ### - 2024-10-18
 - env/env.php composer.json autoload 등록 및 테스트
 - 데이터 베이스 연결 관련 리스트,수정,업데이트,저장,삭제 테스트 test/Db class new add

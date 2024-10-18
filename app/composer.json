@@ -10,9 +10,6 @@
             "My\\Columns\\": "columns",
             "My\\Service\\": "service",
             "My\\Topadm\\": "topadm"
-        },
-        "files" : [
-            "env/env.php"
-        ]
+        }
     }
 }
