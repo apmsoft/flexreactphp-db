@@ -5,6 +5,7 @@
     "q" : "검색어",
     "signdate" : "가입일",
     "limit" : "출력갯수",
+    "title" : "제목",
     "id" : "유니크ID",
     "recently_connect_date":"최근접속일",
     "logout_time":"로그아웃시간",

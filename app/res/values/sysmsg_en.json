@@ -19,5 +19,12 @@
     "e_first_alphabet":"Please enter the first letter in English only",
     "e_json":"Please enter data in JSON format",
     "e_float": "Enter only numbers and decimal numbers",
-    "e_link_url": "Enter the URL address correctly"
+    "e_link_url": "Enter the URL address correctly",
+
+    "v_insert":"Successfully registered.",
+    "v_update":"Updated successfully.",
+    "v_delete":"Deleted successfully.",
+    "v_authentication": "You have logged in successfully",
+
+    "e_db_unenabled": "Data has already been deleted or lost."
 }

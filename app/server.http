@@ -12,5 +12,35 @@ GET {{HOST}}/service/test
 ###
 GET {{HOST}}/service/r
 
-###
+######## DB test_db.flex_test table
+### DB List
 POST {{HOST}}/db/list
+Content-Type:{{C_TYPE}}
+
+{"page":1,"q":""}
+
+### DB insert
+POST {{HOST}}/db/insert
+Content-Type:{{C_TYPE}}
+
+{"title" : "테스트"}
+
+
+### DB edit
+POST {{HOST}}/db/edit
+Content-Type:{{C_TYPE}}
+
+{"id" : 1}
+
+### DB update
+POST {{HOST}}/db/update
+Content-Type:{{C_TYPE}}
+
+{"id" : 1, "title" : "테스트 업데이트3"}
+
+
+### DB delete
+POST {{HOST}}/db/delete
+Content-Type:{{C_TYPE}}
+
+{"id" : 1}

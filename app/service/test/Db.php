@@ -11,6 +11,7 @@ use Flex\Banana\Classes\Db\DbMySqli;
 use Flex\Banana\Adapters\DbMySqlAdapter;
 use Flex\Banana\Classes\Paging\Relation;
 use Flex\Banana\Classes\Request\FormValidation as Validation;
+use Flex\Banana\Classes\Date\DateTimez;
 
 use Flex\Banana\Interfaces\ListInterface;
 use Flex\Banana\Interfaces\InsertInterface;
@@ -19,7 +20,7 @@ use Flex\Banana\Interfaces\DeleteInterface;
 
 use My\Columns\Test\TestEnum;
 
-class Db extends DbMySqlAdapter implements ListInterface 
+class Db extends DbMySqlAdapter implements ListInterface,EditUpdateInterface,DeleteInterface
 {
     # Enum&Types 인스턴스
     private TestEnum $testEnum;
@@ -42,6 +43,7 @@ class Db extends DbMySqlAdapter implements ListInterface
         # Validation
         try{
             (new Validation('page', R::strings('page'),$this->requested->page ?? 1))->number();
+            (new Validation('q',R::strings('q'),$this->requested->q ?? ''))->disliking(['']);
         }catch(\Exception $e){
             Log::e( $e->getMessage());
             return $e->getMessage();
@@ -53,7 +55,8 @@ class Db extends DbMySqlAdapter implements ListInterface
         $model->page         = $this->requested->page ?? 1;   // 현재페이지
         $model->page_count   = 10;  // 출력갯수
         $model->block_limit  = 2;   // 페이지블록수
-        $model->data = [];
+        $model->q            = $this->requested->q ?? '';   // 검색어
+        $model->data         = [];
 
         # total record
         $model->total_record = $this->db->table(R::tables('test'))->total();
@@ -84,8 +87,166 @@ class Db extends DbMySqlAdapter implements ListInterface
 
         # output
         return JsonEncoder::toJson([
+            "result"       => "true",
+            'total_page'   => $paging->totalPage,
+            'total_record' => $paging->totalRecord,
+            'page'         => $paging->page,
+            'paging'       => $relation,
+            'q'            => $model->q,
+            "msg"          => $model->data
+        ]);
+    }
+
+
+    public function doInsert(?array $params = []): ?string
+    {
+        # request
+        $this->requested->post();
+
+        # Validation
+        try{
+            (new Validation('title', R::strings('title'),$this->requested->title))->null();
+        }catch(\Exception $e){
+            Log::e( $e->getMessage());
+            return $e->getMessage();
+        }
+
+        # model
+        $model = new Model($params);
+        $model->data         = [];
+
+        # db
+        $this->db->autocommit(FALSE);
+        try{
+            $this->db[TestEnum::TITLE()]    = $this->requested->title;
+            $this->db[TestEnum::SIGNDATE()] = (new DateTimez("now"))->format('Y-m-d H:i:s');
+            $this->db->table( R::tables('test') )->insert();
+        }catch(\Exception $e){
+            Log::e($e->getMessage());
+        }
+        $this->db->commit();
+
+        # output
+        return JsonEncoder::toJson([
             "result" => "true",
-            "msg" => $model->data
+            "msg"    => R::sysmsg('v_insert')
+        ]);
+    }
+
+    public function doEdit(?array $params = []): ?string
+    {
+        # request
+        $this->requested->post();
+
+        # Validation
+        try{
+            (new Validation('id', R::strings('id'),$this->requested->id))->null()->number();
+        }catch(\Exception $e){
+            Log::e( $e->getMessage());
+            return $e->getMessage();
+        }
+
+        # model
+        $model = new Model($params);
+        $model->data = [];
+
+        # check data db
+        $model->data = $this->db->table( R::tables('test'))
+            ->where(TestEnum::ID(), $this->requested->id)
+            ->query()->fetch_assoc();
+        if(!isset($model->data[TestEnum::ID()])){
+            return  JsonEncoder::toJson(["result"=>"false","msg_code"=>"e_db_unenabled", "msg"=>R::sysmsg('e_db_unenabled')]);
+        }
+
+        # output
+        return JsonEncoder::toJson([
+            "result" => "true",
+            "msg"    => $model->data
+        ]);
+    }
+
+    public function doUpdate(?array $params = []): ?string
+    {
+        # request
+        $this->requested->post();
+
+        # Validation
+        try{
+            (new Validation('id', R::strings('id'),$this->requested->id))->null()->number();
+            (new Validation('title', R::strings('title'),$this->requested->title))->null();
+        }catch(\Exception $e){
+            Log::e( $e->getMessage());
+            return $e->getMessage();
+        }
+
+        # model
+        $model = new Model($params);
+        $model->data = [];
+
+        # check data db
+        $model->data = $this->db->table( R::tables('test'))
+            ->where(TestEnum::ID(), $this->requested->id)
+            ->query()->fetch_assoc();
+        if(!isset($model->data[TestEnum::ID()])){
+            return  JsonEncoder::toJson(["result"=>"false","msg_code"=>"e_db_unenabled", "msg"=>R::sysmsg('e_db_unenabled')]);
+        }
+
+        # db
+        $this->db->autocommit(FALSE);
+        try{
+            $this->db[TestEnum::TITLE()]  = $this->requested->title;
+            $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->update();
+        }catch(\Exception $e){
+            Log::e($e->getMessage());
+        }
+        $this->db->commit();
+
+        # output
+        return JsonEncoder::toJson([
+            "result" => "true",
+            "msg"    => R::sysmsg('v_update')
+        ]);
+    }
+
+
+    public function doDelete(?array $params = []): ?string
+    {
+        # request
+        $this->requested->post();
+
+        # Validation
+        try{
+            (new Validation('id', R::strings('id'),$this->requested->id))->null()->number();
+        }catch(\Exception $e){
+            Log::e( $e->getMessage());
+            return $e->getMessage();
+        }
+
+        # model
+        $model = new Model($params);
+        $model->data = [];
+
+        # check data db
+        $model->data = $this->db->table( R::tables('test'))
+            ->where(TestEnum::ID(), $this->requested->id)
+            ->query()->fetch_assoc();
+        if(!isset($model->data[TestEnum::ID()])){
+            return  JsonEncoder::toJson(["result"=>"false","msg_code"=>"e_db_unenabled", "msg"=>R::sysmsg('e_db_unenabled')]);
+        }
+
+        # db
+        $this->db->autocommit(FALSE);
+        try{
+            $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->delete();
+        }catch(\Exception $e){
+            Log::e($e->getMessage());
+        }
+        $this->db->commit();
+
+        # output
+        return JsonEncoder::toJson([
+            "result" => "true",
+            "msg"    => R::sysmsg('v_delete')
         ]);
     }
 }

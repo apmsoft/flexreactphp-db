@@ -5,6 +5,7 @@
     "q" : "Search term",
     "signdate" : "Sign up date",
     "limit" : "Number of outputs",
+    "title" : "Title",
     "id" : "Unique ID",
     "recently_connect_date":"Recently connected date",
     "logout_time":"Logout time",

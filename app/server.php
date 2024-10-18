@@ -14,6 +14,7 @@ require __DIR__. '/vendor/autoload.php';
 
 # config 설정
 Log::init( Log::MESSAGE_ECHO );
+Log::setDebugs('i','d','v','w','e');
 
 // 허용할 IP 주소 목록
 $allowedIps = ['192.168.65.1']; // 허용 IP 주소
@@ -23,26 +24,41 @@ $browser = new React\Http\Browser();
 $db = new DbMySqli(dsn: DB_HOSTNAME, user: DB_USERID, passwd: DB_PASSWORD, port: DB_PORT);
 
 # router
-$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($browser, $db)
+$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($db)
 {
-    $r->addRoute('GET', '/', function(Requested $requested) use ($browser): string {
+    # test
+    $r->addRoute('GET', '/', function(Requested $requested): string {
         return  JsonEncoder::toJson( ["result"=>"true","msg"=>"Hello"] );
     });
 
-    $r->addGroup('/service', function (FastRoute\RouteCollector $r) use ($browser) 
+    # 사용자 패키지 관련 테스트
+    $r->addGroup('/service', function (FastRoute\RouteCollector $r)
     {
-        $r->addRoute('GET', '/test', function(Requested $requested) use ($browser): string {
+        $r->addRoute('GET', '/test', function(Requested $requested): string {
             return  (new \My\Service\Test\Test())->do();
         });
-        $r->addRoute('GET', '/r', function(Requested $requested) use ($browser): string {
+        $r->addRoute('GET', '/r', function(Requested $requested): string {
             return  (new \My\Service\R\Reso($requested))->do();
         });
     });
 
-    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($browser, $db) 
+    # db 관련 작업 테스트
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($db)
     {
-        $r->addRoute('POST', '/list', function(Requested $requested) use ($browser, $db): string {
+        $r->addRoute('POST', '/list', function(Requested $requested) use ($db): string {
             return  (new \My\Service\Test\Db($requested, $db))->doList();
+        });
+        $r->addRoute('POST', '/insert', function(Requested $requested) use ($db): string {
+            return  (new \My\Service\Test\Db($requested, $db))->doInsert();
+        });
+        $r->addRoute('POST', '/edit', function(Requested $requested) use ($db): string {
+            return  (new \My\Service\Test\Db($requested, $db))->doEdit();
+        });
+        $r->addRoute('POST', '/update', function(Requested $requested) use ($db): string {
+            return  (new \My\Service\Test\Db($requested, $db))->doUpdate();
+        });
+        $r->addRoute('POST', '/delete', function(Requested $requested) use ($db): string {
+            return  (new \My\Service\Test\Db($requested, $db))->doDelete();
         });
     });
 });
