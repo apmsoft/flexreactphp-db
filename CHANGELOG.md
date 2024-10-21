@@ -4,6 +4,10 @@
 
 # Changelog
 
+# v0.1.3
+### - 2024-10-18
+- columns/test/TestEnumTypesTrait.php class example update
+
 # v0.1.2
 ### - 2024-10-18
 - env php 삭제 및 .env 파일을 사용하도록 변경

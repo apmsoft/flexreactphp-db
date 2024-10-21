@@ -6,9 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
-    'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
-    'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'React\\Stream\\' => array($vendorDir . '/react/stream/src'),
     'React\\Socket\\' => array($vendorDir . '/react/socket/src'),
     'React\\Promise\\' => array($vendorDir . '/react/promise/src'),
@@ -18,11 +15,9 @@ return array(
     'React\\Cache\\' => array($vendorDir . '/react/cache/src'),
     'React\\Async\\' => array($vendorDir . '/react/async/src'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
-    'PhpOption\\' => array($vendorDir . '/phpoption/phpoption/src/PhpOption'),
     'My\\Topadm\\' => array($baseDir . '/topadm'),
     'My\\Service\\' => array($baseDir . '/service'),
     'My\\Columns\\' => array($baseDir . '/columns'),
-    'GrahamCampbell\\ResultType\\' => array($vendorDir . '/graham-campbell/result-type/src'),
     'Flex\\Banana\\Utils\\' => array($vendorDir . '/apmsoft/flexphp-banana/utils'),
     'Flex\\Banana\\Traits\\' => array($vendorDir . '/apmsoft/flexphp-banana/traits'),
     'Flex\\Banana\\Interfaces\\' => array($vendorDir . '/apmsoft/flexphp-banana/interfaces'),
@@ -31,5 +26,4 @@ return array(
     'Fig\\Http\\Message\\' => array($vendorDir . '/fig/http-message-util/src'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
     'Evenement\\' => array($vendorDir . '/evenement/evenement/src'),
-    'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
 );
