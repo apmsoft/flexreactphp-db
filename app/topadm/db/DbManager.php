@@ -3,12 +3,15 @@ namespace My\Topadm\Db;
 
 use Flex\Banana\Classes\Request\Validation;
 use My\Topadm\Db\QueryBuilderAbstract;
+use My\Topadm\Db\DbSqlResult;
 use \PDO;
 use \PDOException;
 use \Exception;
 use \ArrayAccess;
 
-class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAccess{
+class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAccess
+{
+	public const __version = '0.1.1';
     protected $pdo;
     private $params = [];
     private array $pdo_options = [
@@ -21,16 +24,33 @@ class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAcce
     }
 
     public function connect(string $host, string $dbname, string $user, string $password, int $port, string $charset, ?array $options=[]) : self
-    {
-        $dsn = $this->createDNS($host, $dbname, $port, $charset);
-        try {
-            $this->pdo = new PDO($dsn, $user, $password, $this->pdo_options+$options);
-        } catch (PDOException $e) {
-            throw new Exception($e->getMessage());
-        }
+	{
+		$dsn = $this->createDSN($host, $dbname, $port, $charset);
+		echo $dsn.PHP_EOL;
+		try {
+			$this->pdo = new PDO($dsn, $user, $password, $this->pdo_options+$options);
+		} catch (PDOException $e) {
+			throw new Exception($e->getMessage());
+		}
 
-        return $this;
-    }
+		// Verify database selection
+		$query = $this->selectDB();
+		$result = $this->pdo->query($query)->fetchColumn();
+		if ($result !== $dbname) {
+			throw new Exception("Connected to database '$result' instead of '$dbname'");
+		}
+
+		return $this;
+	}
+
+	protected function selectDB(): string
+	{
+		return match($this->db_type) {
+			'mysql' => "SELECT DATABASE()",
+			'pgsql' => "SELECT current_database()",
+			default => throw new Exception("Unsupported database type: " . $this->db_type),
+		};
+	}
 
     #@ interface : ArrayAccess
 	# 사용법 : $obj["two"] = "A value";
@@ -62,12 +82,14 @@ class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAcce
     }
 
     # @ abstract : QueryBuilderAbstract
-	public function table(...$tables) : DbManager{
+	public function table(...$tables) : DbManager {
 		parent::init('MAIN');
 		$length = count($tables);
-		$value = ($length ==2) ? implode(',',$tables) : implode(' ',$tables);
+		$value = ($length == 2) 
+			? $this->quoteIdentifier($tables[0]) . ',' . $this->quoteIdentifier($tables[1])
+			: $this->quoteIdentifier($tables[0]);
 		parent::set('table', $value);
-	return $this;
+		return $this;
 	}
 
 	# @ abstract : QueryBuilderAbstract
@@ -154,10 +176,20 @@ class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAcce
 	}
 
 	# @ abstract : QueryBuilderAbstract
-    public function limit(...$limit) : DbManager{
-		$value = 'LIMIT '.implode(',',$limit);
+    # @ abstract : QueryBuilderAbstract
+	public function limit(...$limit): DbManager {
+		$value = match ($this->db_type) {
+			'mysql' => 'LIMIT ' . implode(',', $limit),
+			'pgsql' => match (count($limit)) {
+				1 => 'LIMIT ' . $limit[0],
+				2 => 'LIMIT ' . $limit[1] . ' OFFSET ' . $limit[0],
+				default => throw new Exception("Invalid number of arguments for LIMIT clause"),
+			},
+			default => throw new Exception("Unsupported database type for LIMIT clause: {$this->db_type}"),
+		};
+		
 		parent::set('limit', $value);
-	return $this;
+		return $this;
 	}
 
 	# @ abstract : QueryBuilderAbstract
@@ -184,85 +216,91 @@ class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAcce
 	return $this;
 	}
 
-	# @ abstract : QueryBuilderAbstract
-    public function total(string $column_name = '*') : int {
-		$total = 0;
-		$value = sprintf("COUNT(%s) AS total_count", $column_name); // Alias the count for clarity
-		parent::set('columns', $value); // Set the columns for the query
-		$query = parent::get(); // Get the constructed query
-
-		// Call the custom query method to execute the SQL
-		$result = $this->query($query);
-
-		if ($result) {
-			$row = $result[0]; // Assuming the result is an array of rows
-			$total = (int)$row['total_count']; // Cast to int for safety
+	# @ interface : DBSwitch
+	public function query(string $query = '', array $params = []): DbSqlResult
+	{
+		if (!$query) {
+			$query = $this->query = parent::get();
 		}
 
-		return $total; // Return the total count
+		try {
+			$stmt = $this->pdo->prepare($query);
+			$stmt->execute($params);
+			return new DbSqlResult($stmt);
+		} catch (PDOException $e) {
+			throw new Exception("Query failed: " . $e->getMessage());
+		}
 	}
 
-	# @ interface : DBSwitch
-	public function query(string $query = '') : mixed
-	{
-        if (!$query) {
-            $query = $this->query = parent::get();
-        }
+	# @ abstract : QueryBuilderAbstract
+	public function total(string $column_name = '*') : int {
+		$value = sprintf("COUNT(%s) AS total_count", $column_name);
+		parent::set('columns', $value);
+		$query = parent::get();
 
-        try {
-            $stmt = $this->pdo->prepare($query);
-            $stmt->execute();
-            return $stmt->fetchAll();
-        } catch (PDOException $e) {
-            throw new Exception("Query failed: " . $e->getMessage());
-        }
-    }
+		$result = $this->query($query);
+		$row = $result->fetch_assoc();
+		return (int)($row['total_count'] ?? 0);
+	}
 
 	# @ interface : DBSwitch
 	# $db['name'] = 1, $db['age'] = 2;
 	public function insert() : bool {
-        if (empty($this->params)) {
-            return false;
-        }
+		if (empty($this->params)) {
+			return false;
+		}
 
-        $fields = implode(',', array_map(fn($k) => "`$k`", array_keys($this->params)));
-        $values = implode(',', array_map(fn($v) => "'".$this->real_escape_string($v)."'", $this->params));
-        $this->params = []; // Reset params
+		$fields = implode(',', array_map([$this, 'quoteIdentifier'], array_keys($this->params)));
+		$placeholders = implode(',', array_map(fn($k) => ":$k", array_keys($this->params)));
 
-        $query = sprintf("INSERT INTO `%s` (%s) VALUES (%s)", $this->query_params['table'], $fields, $values);
-        return $this->query($query);
-    }
+		$query = sprintf("INSERT INTO %s (%s) VALUES (%s)", 
+			$this->query_params['table'],
+			$fields, 
+			$placeholders
+		);
+
+		echo $query.PHP_EOL;
+
+		try {
+			$result = $this->query($query, $this->params);
+			$this->params = []; // Reset params
+			return true; // PostgreSQL doesn't always return affected rows for INSERT
+		} catch (Exception $e) {
+			error_log("Insert failed: " . $e->getMessage());
+			return false;
+		}
+	}
 
 	# @ interface
 	public function update() : bool {
-        if (empty($this->params) || empty($this->query_params['where'])) {
-            return false;
-        }
+		if (empty($this->params) || empty($this->query_params['where'])) {
+			return false;
+		}
 
-        $fieldValues = implode(',', array_map(function ($k, $v) {
-            $escapedValue = preg_match("/($k)(\+|\-|\*|\/)(\d+)/", $v) ? $v : "'".$this->real_escape_string($v)."'";
-            return "`$k`=$escapedValue";
-        }, array_keys($this->params), $this->params));
+		$setClause = implode(',', array_map(fn($k) => $this->quoteIdentifier($k) . " = :$k", array_keys($this->params)));
+		$query = sprintf("UPDATE %s SET %s %s", 
+			$this->query_params['table'], 
+			$setClause, 
+			$this->query_params['where']
+		);
 
-        $query = sprintf("UPDATE `%s` SET %s %s", $this->query_params['table'], $fieldValues, $this->query_params['where']);
-        $this->params = []; // Reset params
-        return $this->query($query);
-    }
+		$result = $this->query($query, $this->params);
+		$this->params = []; // Reset params
+		return $result->num_rows() > 0;
+	}
 
 	# @ interface : DBSwitch
 	public function delete() : bool {
-        if (empty($this->query_params['where'])) {
-            return false;
-        }
+		if (empty($this->query_params['where'])) {
+			return false;
+		}
 
-        $query = sprintf("DELETE FROM `%s` %s", $this->query_params['table'], $this->query_params['where']);
-        return $this->query($query);
-    }
+		$query = sprintf("DELETE FROM %s %s", 
+			$this->query_params['table'], 
+			$this->query_params['where']
+		);
+		$result = $this->query($query);
+		return $result->num_rows() > 0;
+	}
 
 }
-
-// $db = (new DbManager("mysql"))
-//     ->connect("localhost","test_db","test","test1234",3360, "utf-8");
-
-//     $db->close("asdfdsafdsa")
-?>

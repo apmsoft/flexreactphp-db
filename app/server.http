@@ -30,17 +30,17 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/edit
 Content-Type:{{C_TYPE}}
 
-{"id" : 1}
+{"id" : 5}
 
 ### DB update
 POST {{HOST}}/db/update
 Content-Type:{{C_TYPE}}
 
-{"id" : 1, "title" : "테스트 업데이트3"}
+{"id" : 5, "title" : "테스트 업데이트3"}
 
 
 ### DB delete
 POST {{HOST}}/db/delete
 Content-Type:{{C_TYPE}}
 
-{"id" : 1}
+{"id" : 5}

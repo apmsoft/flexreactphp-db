@@ -116,15 +116,16 @@ class Db extends DbSqlAdapter implements ListInterface,EditUpdateInterface,Delet
         $model->data         = [];
 
         # db
-        $this->db->autocommit(FALSE);
         try{
+            $this->db->beginTransaction();
             $this->db[TestEnum::TITLE()]    = $this->requested->title;
             $this->db[TestEnum::SIGNDATE()] = (new DateTimez("now"))->format('Y-m-d H:i:s');
             $this->db->table( R::tables('test') )->insert();
+            $this->db->commit();
         }catch(\Exception $e){
+            $this->db->rollBack();
             Log::e($e->getMessage());
         }
-        $this->db->commit();
 
         # output
         return JsonEncoder::toJson([
@@ -192,14 +193,15 @@ class Db extends DbSqlAdapter implements ListInterface,EditUpdateInterface,Delet
         }
 
         # db
-        $this->db->autocommit(FALSE);
         try{
+            $this->db->beginTransaction();
             $this->db[TestEnum::TITLE()]  = $this->requested->title;
             $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->update();
+            $this->db->commit();
         }catch(\Exception $e){
+            $this->db->rollBack();
             Log::e($e->getMessage());
         }
-        $this->db->commit();
 
         # output
         return JsonEncoder::toJson([
@@ -235,13 +237,14 @@ class Db extends DbSqlAdapter implements ListInterface,EditUpdateInterface,Delet
         }
 
         # db
-        $this->db->autocommit(FALSE);
         try{
+            $this->db->beginTransaction();
             $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->delete();
+            $this->db->commit();
         }catch(\Exception $e){
+            $this->db->rollBack();
             Log::e($e->getMessage());
         }
-        $this->db->commit();
 
         # output
         return JsonEncoder::toJson([

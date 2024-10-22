@@ -3,7 +3,7 @@ namespace My\Topadm\Db;
 
 use My\Topadm\Db\DnsBuilder;
 use Flex\Banana\Classes\Db\WhereHelper;
-
+use \Exception;
 # purpose : 각종 SQL 관련 디비를 통일성있게  작성할 수 있도록 틀을 제공
 abstract class QueryBuilderAbstract extends DnsBuilder
 {
@@ -68,6 +68,15 @@ abstract class QueryBuilderAbstract extends DnsBuilder
     public function set(string $style, string $value) : void {
         if($this->query_mode == 'SUB') $this->sub_query_params[$style] = $value;
         else $this->query_params[$style] = $value;
+    }
+
+    protected function quoteIdentifier($identifier): string
+    {
+        return match($this->db_type) {
+            'pgsql' => '"' . str_replace('"', '""', $identifier) . '"',
+            'mysql' => '`' . str_replace('`', '``', $identifier) . '`',
+            default => throw new Exception("Unsupported database type for quoting: {$this->db_type}"),
+        };
     }
 
     public function get() : string

@@ -17,10 +17,12 @@ Log::init( Log::MESSAGE_ECHO );
 Log::setDebugs('i','d','v','w','e');
 
 # env
+// define('DB_HOST', "flexreactphp-postgres" );
 define('DB_HOST', "flexreactphp-mysql" );
 define('DB_NAME', getenv('DB_DATABASE'));
 define('DB_USERID', getenv('DB_USER'));
 define('DB_PASSWORD', getenv('DB_PASSWORD'));
+// define('DB_PORT', 5432);
 define('DB_PORT', 3306);
 
 Log::d('DB_HOST',DB_HOST);
@@ -33,8 +35,9 @@ $allowedIps = ['192.168.65.1']; // 허용 IP 주소
 
 # class
 $browser = new React\Http\Browser();
+// $db = (new DbManager("pgsql"))
 $db = (new DbManager("mysql"))
-    ->connect(host: DB_HOST, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT, charset:"utf-8");
+    ->connect(host: DB_HOST, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT, charset:"utf8");
 
 # router
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($db)

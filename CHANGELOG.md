@@ -9,6 +9,8 @@
 - 디비변수몇 공통적인 네이밍 DB_로 통합
 - flexreact-php-mysql 에서 flexreactphp-db 로 프로젝트명 변경
 - project명 변경에 따른 소스 설정 변경
+- test DbManager,DbSqlInterface,DbSqlResult,DnsBuilder,QueryBuilderAbstract class new add
+- test DbSqlAdapter class new add
 
 # v0.1.3
 ### - 2024-10-18
