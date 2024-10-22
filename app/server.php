@@ -7,7 +7,7 @@ use Flex\Banana\Classes\Log;
 use Flex\Banana\Classes\R;
 use Flex\Banana\Classes\Json\JsonEncoder;
 use Flex\Banana\Utils\Requested;
-use Flex\Banana\Classes\Db\DbMySqli;
+use My\Topadm\Db\DbManager;
 
 # autoload
 require __DIR__. '/vendor/autoload.php';
@@ -17,12 +17,14 @@ Log::init( Log::MESSAGE_ECHO );
 Log::setDebugs('i','d','v','w','e');
 
 # env
-define('DB_HOSTNAME', "flexreactphp-mysql:" . getenv('DB_DATABASE'));
+define('DB_HOST', "flexreactphp-mysql" );
+define('DB_NAME', getenv('DB_DATABASE'));
 define('DB_USERID', getenv('DB_USER'));
 define('DB_PASSWORD', getenv('DB_PASSWORD'));
 define('DB_PORT', 3306);
 
-Log::d('DB_HOSTNAME',DB_HOSTNAME);
+Log::d('DB_HOST',DB_HOST);
+Log::d('DB_NAME',DB_NAME);
 Log::d('DB_USERID',DB_USERID);
 Log::d('DB_PASSWORD',DB_PASSWORD);
 
@@ -31,7 +33,8 @@ $allowedIps = ['192.168.65.1']; // 허용 IP 주소
 
 # class
 $browser = new React\Http\Browser();
-$db = new DbMySqli(dsn: DB_HOSTNAME, user: DB_USERID, passwd: DB_PASSWORD, port: DB_PORT);
+$db = (new DbManager("mysql"))
+    ->connect(host: DB_HOST, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT, charset:"utf-8");
 
 # router
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($db)

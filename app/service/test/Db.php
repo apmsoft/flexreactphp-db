@@ -7,8 +7,8 @@ use Flex\Banana\Classes\Json\JsonEncoder;
 use Flex\Banana\Classes\Model;
 use Flex\Banana\Utils\Requested;
 
-use Flex\Banana\Classes\Db\DbMySqli;
-use Flex\Banana\Adapters\DbMySqlAdapter;
+use My\Topadm\Db\DbManager;
+use My\Topadm\Db\DbSqlAdapter;
 use Flex\Banana\Classes\Paging\Relation;
 use Flex\Banana\Classes\Request\FormValidation as Validation;
 use Flex\Banana\Classes\Date\DateTimez;
@@ -20,14 +20,14 @@ use Flex\Banana\Interfaces\DeleteInterface;
 
 use My\Columns\Test\TestEnum;
 
-class Db extends DbMySqlAdapter implements ListInterface,EditUpdateInterface,DeleteInterface
+class Db extends DbSqlAdapter implements ListInterface,EditUpdateInterface,DeleteInterface
 {
     # Enum&Types 인스턴스
     private TestEnum $testEnum;
 
     public function __construct(
         private Requested $requested,
-        DbMySqli $db
+        DbManager $db
     ) {
         parent::__construct(db: $db);
 
