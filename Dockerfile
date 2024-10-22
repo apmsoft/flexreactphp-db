@@ -1,6 +1,6 @@
 FROM php:8.3-alpine
 
-# Install dependencies for Composer, ReactPHP, MySQLi, and GD
+# Install dependencies for Composer, ReactPHP, MySQL, PostgreSQL, GD
 RUN apk add --no-cache \
     curl \
     libzip-dev \
@@ -8,10 +8,11 @@ RUN apk add --no-cache \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
-    git
+    git \
+    postgresql-dev
 
 # Install PHP extensions
-RUN docker-php-ext-install mysqli pdo pdo_mysql zip
+RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql zip
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install -j$(nproc) gd
 

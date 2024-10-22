@@ -17,9 +17,9 @@ Log::init( Log::MESSAGE_ECHO );
 Log::setDebugs('i','d','v','w','e');
 
 # env
-define('DB_HOSTNAME', "flexreact-php-mysql:" . getenv('MYSQL_DATABASE'));
-define('DB_USERID', getenv('MYSQL_USER'));
-define('DB_PASSWORD', getenv('MYSQL_PASSWORD'));
+define('DB_HOSTNAME', "flexreactphp-mysql:" . getenv('DB_DATABASE'));
+define('DB_USERID', getenv('DB_USER'));
+define('DB_PASSWORD', getenv('DB_PASSWORD'));
 define('DB_PORT', 3306);
 
 Log::d('DB_HOSTNAME',DB_HOSTNAME);

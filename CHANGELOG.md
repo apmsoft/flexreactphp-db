@@ -1,8 +1,19 @@
-## -project-name : flexreact-php-mysql
+# =================================
+# 현재 버전
+# ---------------------------------
+## -project-name : flexreactphp-db
 ## -version-code : 1
-## -version-name : v0.1.2
+## -version-name : v0.1.3
+#----------------------------------
 
 # Changelog
+
+# v0.1.4
+### - 2024-10-22
+- PostgreSQL 추가(슈퍼유저기능 포함)
+- 디비변수몇 공통적인 네이밍 DB_로 통합
+- flexreact-php-mysql 에서 flexreactphp-db 로 프로젝트명 변경
+- project명 변경에 따른 소스 설정 변경
 
 # v0.1.3
 ### - 2024-10-18
