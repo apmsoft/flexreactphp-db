@@ -25,7 +25,7 @@ composer install
 cd ..
 docker-compose down
 docker-compose --env-file .env up -d --build
-docker-compose logs -f
+docker-compose logs -f --tail 10
 
 
 ##############
@@ -40,13 +40,13 @@ curl localhost:8888
 
 # build up
 docker-compose --env-file .env up -d --build flexreactphp
-docker-compose logs -f
+docker-compose logs -f --tail 10
 
 # 도커 컨테이너 내부 접근
 docker exec -it flexreactphp /bin/sh
 
 # 도커 실시간 로그 확인
-docker-compose logs -f
+docker-compose logs -f --tail 10
 
 ##############
 # db 접속
