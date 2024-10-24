@@ -1,0 +1,1 @@
+pgrep -f test_clientsoc.php | xargs kill -9
