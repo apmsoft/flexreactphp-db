@@ -5,7 +5,7 @@
 
 # dev-main
 ### - 2024-10-25
-- yml 리소스 limit 추가
+- yml 리소스 limit 추가 및 업데이트
 
 ### - 2024-10-22
 - PostgreSQL 추가(슈퍼유저기능 포함)

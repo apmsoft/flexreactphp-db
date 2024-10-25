@@ -120,12 +120,11 @@ services:
       driver: json-file
       options:
         max-size: "10m"
-        max-file: "5"
+        max-file: "3"
         compress: "true"
         tag: "{{.Name}}"
         labels: "production"
         env: "os,customer"
-        rotate: "86400"
     ports:
       - "54320:5432"
     networks:
