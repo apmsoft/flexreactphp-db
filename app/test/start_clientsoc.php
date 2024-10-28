@@ -57,76 +57,76 @@ exec("php -q test_clientsoc.php 39 >> log_clientsoc.out &");
 exec("php -q test_clientsoc.php 40 >> log_clientsoc.out &");
 
 // 50
-// exec("php -q test_clientsoc.php 41 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 42 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 43 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 44 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 45 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 46 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 47 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 48 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 49 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 50 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 41 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 42 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 43 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 44 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 45 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 46 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 47 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 48 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 49 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 50 >> log_clientsoc.out &");
 
 // 60
-// exec("php -q test_clientsoc.php 51 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 52 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 53 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 54 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 55 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 56 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 57 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 58 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 59 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 60 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 51 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 52 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 53 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 54 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 55 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 56 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 57 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 58 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 59 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 60 >> log_clientsoc.out &");
 
-// // 70
-// exec("php -q test_clientsoc.php 61 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 62 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 63 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 64 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 65 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 66 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 67 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 68 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 69 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 70 >> log_clientsoc.out &");
+// 70
+exec("php -q test_clientsoc.php 61 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 62 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 63 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 64 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 65 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 66 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 67 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 68 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 69 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 70 >> log_clientsoc.out &");
 
-// // 80
-// exec("php -q test_clientsoc.php 71 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 72 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 73 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 74 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 75 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 76 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 77 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 78 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 79 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 80 >> log_clientsoc.out &");
+// 80
+exec("php -q test_clientsoc.php 71 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 72 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 73 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 74 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 75 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 76 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 77 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 78 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 79 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 80 >> log_clientsoc.out &");
 
-// // 90
-// exec("php -q test_clientsoc.php 81 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 82 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 83 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 84 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 85 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 86 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 87 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 88 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 89 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 90 >> log_clientsoc.out &");
+// 90
+exec("php -q test_clientsoc.php 81 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 82 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 83 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 84 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 85 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 86 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 87 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 88 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 89 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 90 >> log_clientsoc.out &");
 
-// // 100
-// exec("php -q test_clientsoc.php 91 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 92 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 93 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 94 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 95 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 96 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 97 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 98 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 99 >> log_clientsoc.out &");
-// exec("php -q test_clientsoc.php 100 >> log_clientsoc.out &");
+// 100
+exec("php -q test_clientsoc.php 91 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 92 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 93 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 94 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 95 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 96 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 97 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 98 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 99 >> log_clientsoc.out &");
+exec("php -q test_clientsoc.php 100 >> log_clientsoc.out &");
 
 // 110
 // exec("php -q test_clientsoc.php 101 >> log_clientsoc.out &");
