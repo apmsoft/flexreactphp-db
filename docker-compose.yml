@@ -18,11 +18,15 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
     volumes:
       - ./app:/app
+    mem_limit: 4G
+    cpus: 0.4
     deploy:
       resources:
         limits:
+          cpus: 0.4
           memory: 4G
         reservations:
+          cpus: 0.2
           memory: 2G
       replicas: 1
       update_config:
@@ -30,6 +34,17 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+        compress: "true"
+        tag: "{{.Name}}"
+        labels: "production"
+        env: "os,customer"
+        rotate: "86400"
+    restart: always
     depends_on:
       flexreactphp-mysql:
         condition: service_healthy
@@ -49,12 +64,26 @@ services:
     volumes:
       - ./init-mysql:/etc/mysql/conf.d/mysql.cnf
       - flexreactphp-mysql-data:/var/lib/mysql
+    mem_limit: 2G
+    cpus: 0.2
     deploy:
       resources:
         limits:
-          memory: 4G
-        reservations:
+          cpus: 0.2
           memory: 2G
+        reservations:
+          cpus: 0.2
+          memory: 1G
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+        compress: "true"
+        tag: "{{.Name}}"
+        labels: "production"
+        env: "os,customer"
+        rotate: "86400"
     ports:
       - "3336:3306"
     networks:
@@ -77,12 +106,25 @@ services:
     volumes:
       - ./init-postgres:/docker-entrypoint-initdb.d
       - flexreactphp-postgres-data:/var/lib/postgresql/data
+    mem_limit: 2G
+    cpus: 0.2
     deploy:
       resources:
         limits:
-          memory: 4G
-        reservations:
+          cpus: 0.2
           memory: 2G
+        reservations:
+          cpus: 0.2
+          memory: 1G
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+        tag: "{{.Name}}"
+        labels: "production"
+        env: "os,customer"
     ports:
       - "54320:5432"
     networks:
