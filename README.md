@@ -27,6 +27,11 @@ docker-compose down
 docker-compose --env-file .env up -d --build
 docker-compose logs -f --tail 10
 
+##############
+# flexreactphp 만 소스코드가 변경 되었을 경우
+#############
+docker-compose --env-file .env up -d --no-deps --build flexreactphp
+docker-compose logs -f --tail 10
 
 ##############
 # 접속 테스트
