@@ -95,7 +95,7 @@ POST {{HOST}}/db/pgsql/join
 Content-Type:{{C_TYPE}}
 
 
-##### GroupBy
+##### GroupBy + Having
 ### mysql 
 POST {{HOST}}/db/mysql/groupby
 Content-Type:{{C_TYPE}}

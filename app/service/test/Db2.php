@@ -201,6 +201,10 @@ class Db2 extends DbSqlAdapter
 
         # model
         $model = new Model($params);
+
+        #============================
+        # Group By
+        #============================
         $model->groupby = [
             "query" => "",
             "data" => []
@@ -213,6 +217,9 @@ class Db2 extends DbSqlAdapter
         $model->groupby['data'] = $this->db->query($model->groupby['query'])->fetch_assoc();
 
 
+        #============================
+        # Group By +  Where
+        #============================
         $model->groupby_where = [
             "query" => "",
             "data" => []
@@ -226,6 +233,32 @@ class Db2 extends DbSqlAdapter
         $groupby_where_rlt = $this->db->query($model->groupby_where['query']);
         while($row = $groupby_where_rlt->fetch_assoc()){
             $model->groupby_where['data'][] = $row;
+        }
+
+        #============================
+        # Group By +  Having
+        #============================
+        $model->groupby_having = [
+            "query" => "",
+            "data" => []
+        ];
+
+        $model->groupby_having['query'] = $this->db->table(R::tables('customers'))
+            ->select(
+                'customers.customer_id',
+                'customers.name',
+                sprintf("(%s) as order_count",$this->db->tableSub( R::tables('orders') )->select("COUNT(*)")->where('orders.customer_id','=','customers.customer_id')->query)
+            )
+            ->limit(3)
+            ->groupBy('customers.customer_id, customers.name')
+            ->having(
+                $this->db->tableSub( R::tables('orders') )->select("COUNT(*)")->where('orders.customer_id','=','customers.customer_id')->query
+                ,">",1
+            )
+            ->query;
+        $groupby_having_rlt = $this->db->query($model->groupby_having['query']);
+        while($row = $groupby_having_rlt->fetch_assoc()){
+            $model->groupby_having['data'][] = $row;
         }
 
 
@@ -244,6 +277,10 @@ class Db2 extends DbSqlAdapter
 
         # model
         $model = new Model($params);
+
+        #============================
+        # Subquery Select
+        #============================
         $model->subquery_select = [
             "query" => "",
             "data" => []
@@ -264,6 +301,9 @@ class Db2 extends DbSqlAdapter
         }
 
 
+        #============================
+        # Subquery Where
+        #============================
         $model->subquery_where = [
             "query" => "",
             "data" => []
@@ -285,6 +325,9 @@ class Db2 extends DbSqlAdapter
         }
 
 
+        #============================
+        # Subquery Select + Where
+        #============================
         $model->subquery_select_where = [
             "query" => "",
             "data" => []
