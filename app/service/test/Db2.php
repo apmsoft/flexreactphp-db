@@ -10,22 +10,13 @@ use Flex\Banana\Utils\Requested;
 use My\Topadm\Db\DbManager;
 use My\Topadm\Db\DbSqlAdapter;
 
-
-use My\Columns\Test\TestEnum;
-
 class Db2 extends DbSqlAdapter
 {
-    # Enum&Types 인스턴스
-    private TestEnum $testEnum;
-
     public function __construct(
         private Requested $requested,
         DbManager $db
     ) {
         parent::__construct(db: $db);
-
-        # Enum&Types 인스턴스 생성
-        $this->testEnum = TestEnum::create();
     }
 
     # Distinct
@@ -39,18 +30,14 @@ class Db2 extends DbSqlAdapter
         $model->data         = [];
 
         # query
-        $rlt = $this->db->table(R::tables('test'))
-            ->distinct(TestEnum::TITLE() )
-            ->orderBy(TestEnum::TITLE().' DESC')
+        $rlt = $this->db->table(R::tables('customers'))
+            ->distinct('name' )
+            ->orderBy('name DESC')
             ->query();
         while ( $row = $rlt->fetch_assoc() )
         {
             // array push
-            $model->data[] = [
-                // TestEnum::ID()      => $this->testEnum->setId( (int)$row[TestEnum::ID()] )->getId(),
-                TestEnum::TITLE()   => $this->testEnum->setTitle( $row[TestEnum::TITLE()] )->getTitle(),
-                // TestEnum::SIGNDATE()=> $this->testEnum->setSigndate( $row[TestEnum::SIGNDATE()] )->getSigndate()
-            ];
+            $model->data[] = $row;
         }
 
         # output
@@ -70,7 +57,9 @@ class Db2 extends DbSqlAdapter
         # model
         $model = new Model($params);
 
+        #============================
         # INNER JOIN
+        #============================
         $model->inner_join = [
             "query" => "",
             "data" => []
@@ -87,7 +76,9 @@ class Db2 extends DbSqlAdapter
         }
 
 
+        #============================
         # LEFT JOIN (LEFT OUTER JOIN)
+        #============================
         $model->left_join = [
             "query" => "",
             "data" => []
@@ -104,7 +95,9 @@ class Db2 extends DbSqlAdapter
         }
 
 
+        #============================
         # RIGHT JOIN (RIGHT OUTER JOIN)
+        #============================
         $model->right_join = [
             "query" => "",
             "data" => []
@@ -120,7 +113,9 @@ class Db2 extends DbSqlAdapter
             $model->right_join['data'][] = $right_join_row;
         }
 
+        #============================
         # CROSS JOIN
+        #============================
         $model->cross_join = [
             "query" => "",
             "data" => []
@@ -136,7 +131,9 @@ class Db2 extends DbSqlAdapter
             $model->cross_join['data'][] = $cross_join_row;
         }
 
+        #============================
         # FULL OUTER JOIN
+        #============================
         $model->full_outer_join = [
             "query" => "PostGreSQL 에서만 지원하는 기능입니다.",
             "data" => []
@@ -155,7 +152,9 @@ class Db2 extends DbSqlAdapter
             }
         }
 
+        #============================
         # UNION == FULL OUTER JOIN
+        #============================
         $model->union_join = [
             "query" => "MySQL 에서만 지원하는 기능입니다.",
             "data" => []
@@ -177,9 +176,8 @@ class Db2 extends DbSqlAdapter
                     ->query;
 
             $model->union_join['query'] = $this->db->tableJoin("UNION",
-            $left_join,
-            $right_join
-            )
+            $left_join,$right_join
+                )
                 ->limit(100)->query;
 
             $union_join_rlt = $this->db->query( $model->union_join['query'] );
@@ -193,5 +191,47 @@ class Db2 extends DbSqlAdapter
             "result" => "true",
             "msg"    => $model->fetch()
         ],["amount"]);
+    }
+
+    # GroupBy
+    public function doGroupBy(?array $params=[]) : ?string
+    {
+        # request
+        $this->requested->post();
+
+        # model
+        $model = new Model($params);
+        $model->groupby = [
+            "query" => "",
+            "data" => []
+        ];
+
+        $model->groupby['query'] = $this->db->table(R::tables('customers'))
+            ->select('customers.customer_id','customers.name','customers.city')->limit(3)
+                ->groupBy('customers.customer_id')
+                    ->query;
+        $model->groupby['data'] = $this->db->query($model->groupby['query'])->fetch_assoc();
+
+
+        $model->groupby_where = [
+            "query" => "",
+            "data" => []
+        ];
+
+        $model->groupby_where['query'] = $this->db->table(R::tables('customers'))
+            ->select('customers.customer_id','customers.name','customers.city')->limit(3)
+                ->groupBy('customers.customer_id, customers.name, customers.city')
+                    ->where("customers.city","LIKE-R","New")
+                    ->query;
+        while($row = $this->db->query($model->groupby_where['query'])->fetch_assoc()){
+            $model->groupby_where['data'][] = $row;
+        }
+
+
+        # output
+        return JsonEncoder::toJson([
+            "result" => "true",
+            "msg"    => $model->fetch()
+        ]);
     }
 }

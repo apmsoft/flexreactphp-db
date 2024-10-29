@@ -122,6 +122,17 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
             return  (new \My\Service\Test\Db2($requested, $postgress))->doJoin();
         });
     });
+
+    # GroupBy
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$postgress)
+    {
+        $r->addRoute('POST', '/mysql/groupby', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db2($requested, $mysql))->doGroupBy();
+        });
+        $r->addRoute('POST', '/pgsql/groupby', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db2($requested, $postgress))->doGroupBy();
+        });
+    });
 });
 
 

@@ -93,3 +93,13 @@ Content-Type:{{C_TYPE}}
 ### pgsql 
 POST {{HOST}}/db/pgsql/join
 Content-Type:{{C_TYPE}}
+
+
+##### GroupBy
+### mysql 
+POST {{HOST}}/db/mysql/groupby
+Content-Type:{{C_TYPE}}
+
+### pgsql 
+POST {{HOST}}/db/pgsql/groupby
+Content-Type:{{C_TYPE}}

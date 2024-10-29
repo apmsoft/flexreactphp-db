@@ -80,9 +80,7 @@ class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAcce
 	public function table(...$tables) : DbManager {
 		parent::init('MAIN');
 		$length = count($tables);
-		$value = ($length == 2) 
-			? $this->quoteIdentifier($tables[0]) . ',' . $this->quoteIdentifier($tables[1])
-			: $this->quoteIdentifier($tables[0]);
+		$value = ($length == 2) ? $tables[0] . ',' . $tables[1] : $tables[0];
 		parent::set('table', $value);
 		return $this;
 	}
@@ -120,22 +118,6 @@ class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAcce
 	# @ abstract : QueryBuilderAbstract
     public function select(...$columns) : DbManager{
 		$value = implode(',', $columns);
-		parent::set('columns', $value);
-	return $this;
-	}
-
-	# @ abstract : QueryBuilderAbstract
-    public function selectGroupBy(...$columns) : DbManager{
-		$argv = [];
-		#복수인지 체크
-		if(count($columns)<2){
-			$columns = explode(',', $columns[0]);
-		}
-
-		foreach($columns as $name){
-			$argv[] = (strpos($name,'(') !==false) ? $name : sprintf("ANY_VALUE(%s) as %s",$name,$name);
-		}
-		$value = implode(',', $argv);
 		parent::set('columns', $value);
 	return $this;
 	}
