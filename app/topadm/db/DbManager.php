@@ -76,11 +76,6 @@ class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAcce
 		return isset($this->params[$offset]) ? $this->params[$offset] : null;
 	}
 
-    public function __call($name, $arguments)
-    {
-        return call_user_func_array([$this->pdo, $name], $arguments);
-    }
-
     # @ abstract : QueryBuilderAbstract
 	public function table(...$tables) : DbManager {
 		parent::init('MAIN');
@@ -187,7 +182,7 @@ class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAcce
 			},
 			default => throw new Exception("Unsupported database type for LIMIT clause: {$this->db_type}"),
 		};
-		
+
 		parent::set('limit', $value);
 		return $this;
 	}
@@ -303,4 +298,30 @@ class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAcce
 		return $result->num_rows() > 0;
 	}
 
+
+    public function __call($method, $args)
+    {
+		if(method_exists($this, $method)){
+			if($method == 'aes_decrypt' || $method == 'aes_encrypt'){
+				return call_user_func_array([$this, $method],$args);
+			}
+		}else{
+			return call_user_func_array([$this->pdo, $method], $args);
+		}
+    }
+
+	public function __get(string $propertyName) {
+		if(property_exists(__CLASS__,$propertyName)){
+			if($propertyName == 'query'){
+				return parent::get();
+			}else{
+				return $this->{$propertyName};
+			}
+		}
+	}
+
+	# db close
+	public function __destruct(){
+		// parent::close();
+	}
 }

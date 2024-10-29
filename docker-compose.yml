@@ -37,13 +37,12 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "10m"
+        max-size: "5m"
         max-file: "5"
         compress: "true"
         tag: "{{.Name}}"
         labels: "production"
-        env: "os,customer"
-        rotate: "86400"
+        env: "os"
     restart: always
     depends_on:
       flexreactphp-mysql:
@@ -77,13 +76,12 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "10m"
+        max-size: "5m"
         max-file: "5"
         compress: "true"
         tag: "{{.Name}}"
         labels: "production"
-        env: "os,customer"
-        rotate: "86400"
+        env: "os"
     ports:
       - "3336:3306"
     networks:
@@ -119,12 +117,12 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "5m"
+        max-file: "5"
         compress: "true"
         tag: "{{.Name}}"
         labels: "production"
-        env: "os,customer"
+        env: "os"
     ports:
       - "54320:5432"
     networks:

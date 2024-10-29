@@ -17,12 +17,12 @@ Log::init( Log::MESSAGE_ECHO );
 Log::setDebugs('i','d','v','w','e');
 
 # env
-// define('DB_HOST', "flexreactphp-postgres" );
+define('DB_HOST2', "flexreactphp-postgres" );
 define('DB_HOST', "flexreactphp-mysql" );
 define('DB_NAME', getenv('DB_DATABASE'));
 define('DB_USERID', getenv('DB_USER'));
 define('DB_PASSWORD', getenv('DB_PASSWORD'));
-// define('DB_PORT', 5432);
+define('DB_PORT2', 5432);
 define('DB_PORT', 3306);
 
 Log::d('DB_HOST',DB_HOST);
@@ -36,11 +36,14 @@ $allowedIps = ['192.168.65.1']; // 허용 IP 주소
 # class
 $browser = new React\Http\Browser();
 // $db = (new DbManager("pgsql"))
-$db = (new DbManager("mysql"))
+$mysql = (new DbManager("mysql"))
     ->connect(host: DB_HOST, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT, charset:"utf8");
 
+$postgress = (new DbManager("pgsql"))
+    ->connect(host: DB_HOST2, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT2, charset:"utf8");
+
 # router
-$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($db)
+$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($mysql, $postgress)
 {
     # test
     $r->addRoute('GET', '/', function(Requested $requested): string {
@@ -58,23 +61,65 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
         });
     });
 
-    # db 관련 작업 테스트
-    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($db)
+    # mysql 관련 작업 테스트
+    $r->addGroup('/db/mysql', function (FastRoute\RouteCollector $r) use ($mysql)
     {
-        $r->addRoute('POST', '/list', function(Requested $requested) use ($db): string {
-            return  (new \My\Service\Test\Db($requested, $db))->doList();
+        $r->addRoute('POST', '/list', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db($requested, $mysql))->doList();
         });
-        $r->addRoute('POST', '/insert', function(Requested $requested) use ($db): string {
-            return  (new \My\Service\Test\Db($requested, $db))->doInsert();
+        $r->addRoute('POST', '/insert', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db($requested, $mysql))->doInsert();
         });
-        $r->addRoute('POST', '/edit', function(Requested $requested) use ($db): string {
-            return  (new \My\Service\Test\Db($requested, $db))->doEdit();
+        $r->addRoute('POST', '/edit', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db($requested, $mysql))->doEdit();
         });
-        $r->addRoute('POST', '/update', function(Requested $requested) use ($db): string {
-            return  (new \My\Service\Test\Db($requested, $db))->doUpdate();
+        $r->addRoute('POST', '/update', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db($requested, $mysql))->doUpdate();
         });
-        $r->addRoute('POST', '/delete', function(Requested $requested) use ($db): string {
-            return  (new \My\Service\Test\Db($requested, $db))->doDelete();
+        $r->addRoute('POST', '/delete', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db($requested, $mysql))->doDelete();
+        });
+    });
+
+    # postgres 관련 작업 테스트
+    $r->addGroup('/db/pgsql', function (FastRoute\RouteCollector $r) use ($postgress)
+    {
+        $r->addRoute('POST', '/list', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db($requested, $postgress))->doList();
+        });
+        $r->addRoute('POST', '/insert', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db($requested, $postgress))->doInsert();
+        });
+        $r->addRoute('POST', '/edit', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db($requested, $postgress))->doEdit();
+        });
+        $r->addRoute('POST', '/update', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db($requested, $postgress))->doUpdate();
+        });
+        $r->addRoute('POST', '/delete', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db($requested, $postgress))->doDelete();
+        });
+    });
+
+    # Distinct
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$postgress)
+    {
+        $r->addRoute('POST', '/mysql/distinct', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db2($requested, $mysql))->doDistinct();
+        });
+        $r->addRoute('POST', '/pgsql/distinct', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db2($requested, $postgress))->doDistinct();
+        });
+    });
+
+    # Join
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$postgress)
+    {
+        $r->addRoute('POST', '/mysql/join', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db2($requested, $mysql))->doJoin();
+        });
+        $r->addRoute('POST', '/pgsql/join', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db2($requested, $postgress))->doJoin();
         });
     });
 });

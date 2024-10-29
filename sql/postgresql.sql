@@ -4,7 +4,29 @@ CREATE TABLE flex_test (
     title VARCHAR(45) NOT NULL
 );
 
-COMMENT ON TABLE flex_test IS '테스트 테이블';
-COMMENT ON COLUMN flex_test.id IS '고유번호';
-COMMENT ON COLUMN flex_test.signdate IS '등록일';
-COMMENT ON COLUMN flex_test.title IS '제목';
+CREATE TABLE customers (
+    customer_id SERIAL PRIMARY KEY,
+    name VARCHAR(50),
+    city VARCHAR(50)
+);
+
+INSERT INTO customers (name, city) VALUES
+('Alice', 'New York'),
+('Bob', 'Los Angeles'),
+('Charlie', 'Chicago');
+
+CREATE TABLE orders (
+    order_id SERIAL PRIMARY KEY,
+    customer_id INT REFERENCES customers(customer_id) 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE,
+    product VARCHAR(50),
+    amount DECIMAL(10, 2)
+);
+
+INSERT INTO orders (customer_id, product, amount) VALUES
+(1, 'Laptop', 1200.00),
+(1, 'Phone', 800.00),
+(2, 'Tablet', 500.00),
+(3, 'Monitor', 300.00);
+

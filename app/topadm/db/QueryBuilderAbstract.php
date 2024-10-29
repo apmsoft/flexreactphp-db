@@ -145,4 +145,3 @@ abstract class QueryBuilderAbstract extends DnsBuilder
     return $result;
     }
 }
-?>

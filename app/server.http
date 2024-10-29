@@ -13,34 +13,83 @@ GET {{HOST}}/service/test
 GET {{HOST}}/service/r
 
 ######## DB test_db.flex_test table
-### DB List
-POST {{HOST}}/db/list
+### MYSQL  List
+POST {{HOST}}/db/mysql/list
 Content-Type:{{C_TYPE}}
 
 {"page":1,"q":""}
 
-### DB insert
-POST {{HOST}}/db/insert
+### MYSQL insert
+POST {{HOST}}/db/mysql/insert
 Content-Type:{{C_TYPE}}
 
 {"title" : "테스트"}
 
-
-### DB edit
-POST {{HOST}}/db/edit
+### MYSQL edit
+POST {{HOST}}/db/mysql/edit
 Content-Type:{{C_TYPE}}
 
 {"id" : 5}
 
-### DB update
-POST {{HOST}}/db/update
+### MYSQL update
+POST {{HOST}}/db/mysql/update
 Content-Type:{{C_TYPE}}
 
 {"id" : 5, "title" : "테스트 업데이트3"}
 
-
-### DB delete
-POST {{HOST}}/db/delete
+### MYSQL delete
+POST {{HOST}}/db/mysql/delete
 Content-Type:{{C_TYPE}}
 
 {"id" : 5}
+
+
+
+### POSTGRES  List
+POST {{HOST}}/db/pgsql/list
+Content-Type:{{C_TYPE}}
+
+{"page":1,"q":""}
+
+### POSTGRES insert
+POST {{HOST}}/db/pgsql/insert
+Content-Type:{{C_TYPE}}
+
+{"title" : "테스트"}
+
+### POSTGRES edit
+POST {{HOST}}/db/pgsql/edit
+Content-Type:{{C_TYPE}}
+
+{"id" : 5}
+
+### POSTGRES update
+POST {{HOST}}/db/pgsql/update
+Content-Type:{{C_TYPE}}
+
+{"id" : 5, "title" : "테스트 업데이트3"}
+
+### POSTGRES delete
+POST {{HOST}}/db/pgsql/delete
+Content-Type:{{C_TYPE}}
+
+{"id" : 5}
+
+##### Distinct
+### mysql 
+POST {{HOST}}/db/mysql/distinct
+Content-Type:{{C_TYPE}}
+
+### pgsql 
+POST {{HOST}}/db/pgsql/distinct
+Content-Type:{{C_TYPE}}
+
+
+##### Join
+### mysql 
+POST {{HOST}}/db/mysql/join
+Content-Type:{{C_TYPE}}
+
+### pgsql 
+POST {{HOST}}/db/pgsql/join
+Content-Type:{{C_TYPE}}
