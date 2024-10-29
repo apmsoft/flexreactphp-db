@@ -133,6 +133,17 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
             return  (new \My\Service\Test\Db2($requested, $postgress))->doGroupBy();
         });
     });
+
+    # Sub Query
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$postgress)
+    {
+        $r->addRoute('POST', '/mysql/subquery', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db2($requested, $mysql))->doSubQuery();
+        });
+        $r->addRoute('POST', '/pgsql/subquery', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db2($requested, $postgress))->doSubQuery();
+        });
+    });
 });
 
 

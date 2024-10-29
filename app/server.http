@@ -103,3 +103,13 @@ Content-Type:{{C_TYPE}}
 ### pgsql 
 POST {{HOST}}/db/pgsql/groupby
 Content-Type:{{C_TYPE}}
+
+
+##### Sub Query
+### mysql 
+POST {{HOST}}/db/mysql/subquery
+Content-Type:{{C_TYPE}}
+
+### pgsql 
+POST {{HOST}}/db/pgsql/subquery
+Content-Type:{{C_TYPE}}

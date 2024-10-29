@@ -223,8 +223,89 @@ class Db2 extends DbSqlAdapter
                 ->groupBy('customers.customer_id, customers.name, customers.city')
                     ->where("customers.city","LIKE-R","New")
                     ->query;
-        while($row = $this->db->query($model->groupby_where['query'])->fetch_assoc()){
+        $groupby_where_rlt = $this->db->query($model->groupby_where['query']);
+        while($row = $groupby_where_rlt->fetch_assoc()){
             $model->groupby_where['data'][] = $row;
+        }
+
+
+        # output
+        return JsonEncoder::toJson([
+            "result" => "true",
+            "msg"    => $model->fetch()
+        ]);
+    }
+
+    # Sub Query
+    public function doSubQuery(?array $params=[]) : ?string
+    {
+        # request
+        $this->requested->post();
+
+        # model
+        $model = new Model($params);
+        $model->subquery_select = [
+            "query" => "",
+            "data" => []
+        ];
+
+        $model->subquery_select['query'] = $this->db->table(R::tables('customers'))
+            ->select(
+                'customer_id','name','city',
+                sprintf("(%s) as amount",$this->db->tableSub( R::tables('orders') )->select("MAX(amount)")->where('customers.customer_id','=','orders.customer_id')->query)
+            )
+            ->orderBy("customer_id DESC")
+            ->limit(10)
+            ->query;
+
+        $subquery_select_rlt = $this->db->query($model->subquery_select['query']);
+        while($subquery_select_row = $subquery_select_rlt->fetch_assoc()){
+            $model->subquery_select['data'][] = $subquery_select_row;
+        }
+
+
+        $model->subquery_where = [
+            "query" => "",
+            "data" => []
+        ];
+
+        $model->subquery_where['query'] = $this->db->table(R::tables('customers'))
+            ->select('customer_id','name','city')
+            ->where(sprintf(
+                "customer_id IN (%s)",
+                $this->db->tableSub( R::tables('orders') )->select("customer_id")->query
+            ))
+            ->orderBy("customer_id DESC")
+            ->limit(10)
+            ->query;
+
+        $subquery_where_rlt = $this->db->query($model->subquery_where['query']);
+        while($subquery_where_row = $subquery_where_rlt->fetch_assoc()){
+            $model->subquery_where['data'][] = $subquery_where_row;
+        }
+
+
+        $model->subquery_select_where = [
+            "query" => "",
+            "data" => []
+        ];
+
+        $model->subquery_select_where['query'] = $this->db->table(R::tables('customers'))
+            ->select(
+                'customer_id','name','city',
+                sprintf("(%s) as amount",$this->db->tableSub( R::tables('orders') )->select("MAX(amount)")->where('customers.customer_id','=','orders.customer_id')->query)
+            )
+            ->where(sprintf(
+                "customer_id IN (%s)",
+                $this->db->tableSub( R::tables('orders') )->select("customer_id")->query
+            ))
+            ->orderBy("customer_id DESC")
+            ->limit(10)
+            ->query;
+
+        $subquery_select_where_rlt = $this->db->query($model->subquery_select_where['query']);
+        while($subquery_select_where_row = $subquery_select_where_rlt->fetch_assoc()){
+            $model->subquery_select_where['data'][] = $subquery_select_where_row;
         }
 
 

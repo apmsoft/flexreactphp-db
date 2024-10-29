@@ -15,8 +15,11 @@ CREATE TABLE customers (
 
 INSERT INTO customers (name, city) VALUES
 ('Alice', 'New York'),
-('Bob', 'Los Angeles'),
-('Charlie', 'Chicago');
+('Bob', 'New York'),
+('Charlie', 'New Orleans'),
+('Dave', 'Newark'),
+('Eve', 'New York'),
+('Frank', 'New Haven');
 
 CREATE TABLE orders (
     `order_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
