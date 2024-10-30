@@ -251,9 +251,7 @@ class Db2 extends DbSqlAdapter
             )
             ->limit(3)
             ->groupBy('customers.customer_id, customers.name')
-            ->having(
-                $this->db->tableSub( R::tables('orders') )->select("COUNT(*)")->where('orders.customer_id','=','customers.customer_id')->query
-                ,">",1
+            ->having("customers.name","=","Alice"
             )
             ->query;
         $groupby_having_rlt = $this->db->query($model->groupby_having['query']);

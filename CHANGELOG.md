@@ -9,7 +9,7 @@
 - DbManager JOIN 관련 테스트
 - DbManager GroupBy 관련 테스트
 - DbManager Sub Query 관련 테스트
-- DbManager GroupBy + Having 관련 테스트
+- DbManager GroupBy + Having 관련 테스트 e
 
 ### - 2024-10-25
 - yml 리소스 limit 추가 및 업데이트
