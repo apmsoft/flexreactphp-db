@@ -251,8 +251,7 @@ class Db2 extends DbSqlAdapter
             )
             ->limit(3)
             ->groupBy('customers.customer_id, customers.name')
-            ->having("customers.name","=","Alice"
-            )
+            ->having("customers.name","=","Alice")
             ->query;
         $groupby_having_rlt = $this->db->query($model->groupby_having['query']);
         while($row = $groupby_having_rlt->fetch_assoc()){
