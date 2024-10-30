@@ -1,5 +1,6 @@
 {
     "test" : "flex_test",
     "customers": "customers",
-    "orders":"orders"
+    "orders":"orders",
+    "users":"users"
 }

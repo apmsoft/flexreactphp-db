@@ -1,3 +1,4 @@
+# 일반 테스트용 
 CREATE TABLE `flex_test` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '고유번호',
   `signdate` datetime NOT NULL COMMENT '등록일',
@@ -6,6 +7,7 @@ CREATE TABLE `flex_test` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 
+# Join 테스트용 
 CREATE TABLE customers (
     `customer_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(50),
@@ -37,3 +39,18 @@ INSERT INTO orders (customer_id, product, amount) VALUES
 (1, 'Phone', 800.00),
 (2, 'Tablet', 500.00),
 (3, 'Monitor', 300.00);
+
+# -- mysql
+#SET @current_mode = @@session.block_encryption_mode;
+#SET @@session.block_encryption_mode = 
+#    CASE 
+#       WHEN @current_mode != 'aes-256-cbc' THEN 'aes-256-cbc'
+#        ELSE @current_mode
+#    END;
+# 암호화 테스트용
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(200) NOT NULL,
+    email VARCHAR(200) NOT NULL,
+    passwd VARCHAR(255) NOT NULL
+);

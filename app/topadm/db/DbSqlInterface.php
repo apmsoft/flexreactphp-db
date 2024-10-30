@@ -6,8 +6,7 @@ use My\Topadm\Db\DbSqlResult;
 interface DbSqlInterface
 {
     public function query(string $query) : DbSqlResult;			# 쿼리
-    public function insert() : bool;			# 저장
-    public function update() : bool;	# 수정
-    public function delete() : bool;	# 삭제
+    public function insert() : void;			# 저장
+    public function update() : void;	# 수정
+    public function delete() : void;	# 삭제
 }
-?>

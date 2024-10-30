@@ -16,5 +16,3 @@ class DbSqlAdapter extends BaseAdapter{
         $this->whereHelper = $whereHelper ?? new WhereHelper();
     }
 }
-
-?>

@@ -144,6 +144,39 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
             return  (new \My\Service\Test\Db2($requested, $postgress))->doSubQuery();
         });
     });
+
+    # Db Aes Encrypt/Decrypt
+    $r->addGroup('/db/cipher', function (FastRoute\RouteCollector $r) use ($mysql,$postgress)
+    {
+        # mysql
+        $r->addRoute('POST', '/mysql/list', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db3($requested, $mysql))->doList();
+        });
+        $r->addRoute('POST', '/mysql/insert', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db3($requested, $mysql))->doInsert();
+        });
+        $r->addRoute('POST', '/mysql/edit', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db3($requested, $mysql))->doEdit();
+        });
+        $r->addRoute('POST', '/mysql/update', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db3($requested, $mysql))->doUpdate();
+        });
+
+        # pgsql
+        $r->addRoute('POST', '/pgsql/list', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db3($requested, $postgress))->doList();
+        });
+        $r->addRoute('POST', '/pgsql/insert', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db3($requested, $postgress))->doInsert();
+        });
+        $r->addRoute('POST', '/pgsql/edit', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db3($requested, $postgress))->doEdit();
+        });
+        $r->addRoute('POST', '/pgsql/update', function(Requested $requested) use ($postgress): string {
+            return  (new \My\Service\Test\Db3($requested, $postgress))->doUpdate();
+        });
+
+    });
 });
 
 

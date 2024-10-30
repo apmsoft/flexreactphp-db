@@ -113,3 +113,56 @@ Content-Type:{{C_TYPE}}
 ### pgsql 
 POST {{HOST}}/db/pgsql/subquery
 Content-Type:{{C_TYPE}}
+
+#####################
+###### AES CBC 암호화 알고리즘
+####################
+### MYSQL  List
+POST {{HOST}}/db/cipher/mysql/list
+Content-Type:{{C_TYPE}}
+
+{"page":1,"q":"이름"}
+
+### MYSQL insert
+POST {{HOST}}/db/cipher/mysql/insert
+Content-Type:{{C_TYPE}}
+
+{"username":"이름명1", "email":"test1@test.com", "passwd":"passwd12#$"}
+
+### MYSQL edit
+POST {{HOST}}/db/cipher/mysql/edit
+Content-Type:{{C_TYPE}}
+
+{"id" : 1}
+
+### MYSQL update
+POST {{HOST}}/db/cipher/mysql/update
+Content-Type:{{C_TYPE}}
+
+{"id":1,"username":"이름1up", "email":"test1@test.com", "passwd":"passwd12#$"}
+
+
+
+### POSTGRES  List
+POST {{HOST}}/db/cipher/pgsql/list
+Content-Type:{{C_TYPE}}
+
+{"page":1,"q":""}
+
+### POSTGRES insert
+POST {{HOST}}/db/cipher/pgsql/insert
+Content-Type:{{C_TYPE}}
+
+{"username":"이름명1", "email":"test1@test.com", "passwd":"passwd12#$"}
+
+### POSTGRES edit
+POST {{HOST}}/db/cipher/pgsql/edit
+Content-Type:{{C_TYPE}}
+
+{"id" : 1}
+
+### POSTGRES update
+POST {{HOST}}/db/cipher/pgsql/update
+Content-Type:{{C_TYPE}}
+
+{"username":"이름1up", "email":"test1@test.com", "passwd":"passwd12#$"}

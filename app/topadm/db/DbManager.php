@@ -1,7 +1,6 @@
 <?php
 namespace My\Topadm\Db;
 
-use Flex\Banana\Classes\Request\Validation;
 use My\Topadm\Db\QueryBuilderAbstract;
 use My\Topadm\Db\DbSqlResult;
 use \PDO;
@@ -12,7 +11,7 @@ use \ArrayAccess;
 class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAccess
 {
 	public const __version = '0.1.1';
-    protected $pdo;
+    public $pdo;
     private $params = [];
     private array $pdo_options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -200,11 +199,25 @@ class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAcce
 			$query = $this->query = parent::get();
 		}
 
+		echo "Executing query: " . $query . PHP_EOL;
+		print_r($params);
+
 		try {
 			$stmt = $this->pdo->prepare($query);
-			$stmt->execute($params);
+
+			// Execute with params if they exist, otherwise pass null
+			$result = $stmt->execute($params ?: null);
+
+			// Check if execution was successful
+			if (!$result) {
+				throw new Exception("Execution failed: " . implode(", ", $stmt->errorInfo()));
+			}
+
 			return new DbSqlResult($stmt);
 		} catch (PDOException $e) {
+			error_log("Query failed: " . $e->getMessage());
+			error_log("SQL: " . $query);
+			error_log("Params: " . print_r($params, true));
 			throw new Exception("Query failed: " . $e->getMessage());
 		}
 	}
@@ -222,62 +235,91 @@ class DbManager extends QueryBuilderAbstract implements DbSqlInterface,ArrayAcce
 
 	# @ interface : DBSwitch
 	# $db['name'] = 1, $db['age'] = 2;
-	public function insert() : bool {
+	public function insert() : void {
 		if (empty($this->params)) {
-			return false;
+			throw new Exception("Empty : params");
 		}
 
-		$fields = implode(',', array_map([$this, 'quoteIdentifier'], array_keys($this->params)));
-		$placeholders = implode(',', array_map(fn($k) => ":$k", array_keys($this->params)));
+		$fields = [];
+		$placeholders = [];
+		$boundParams = [];
 
-		$query = sprintf("INSERT INTO %s (%s) VALUES (%s)", 
+		foreach ($this->params as $field => $value) {
+			$fields[] = $field;
+
+			// Check for HEX(AES_ENCRYPT and encode(encrypt_iv
+			if (is_string($value) && (str_contains($value, 'HEX(AES_ENCRYPT(') || str_contains($value, 'encode('))) {
+				$placeholders[] = $value; // Directly add the expression to placeholders
+			} else {
+				$placeholders[] = ":$field";
+				$boundParams[":$field"] = $value;
+			}
+		}
+
+		$query = sprintf(
+			"INSERT INTO %s (%s) VALUES (%s)",
 			$this->query_params['table'],
-			$fields, 
-			$placeholders
+			implode(',', $fields),
+			implode(',', $placeholders)
 		);
 
-		echo $query.PHP_EOL;
-
 		try {
-			$result = $this->query($query, $this->params);
-			$this->params = []; // Reset params
-			return true; // PostgreSQL doesn't always return affected rows for INSERT
+			$result = $this->query($query, $boundParams);
+			$this->params = [];
 		} catch (Exception $e) {
-			error_log("Insert failed: " . $e->getMessage());
-			return false;
+			throw new Exception("Query failed: " . $e->getMessage());
 		}
 	}
 
 	# @ interface
-	public function update() : bool {
+	public function update() : void {
 		if (empty($this->params) || empty($this->query_params['where'])) {
-			return false;
+			throw new Exception("Empty parameters or WHERE clause is missing");
 		}
 
-		$setClause = implode(',', array_map(fn($k) => $this->quoteIdentifier($k) . " = :$k", array_keys($this->params)));
-		$query = sprintf("UPDATE %s SET %s %s", 
-			$this->query_params['table'], 
-			$setClause, 
+		$setClauses = [];
+		$boundParams = [];
+
+		foreach ($this->params as $field => $value) {
+			// Check for HEX(AES_ENCRYPT and encode(encrypt_iv
+			if (is_string($value) && (str_contains($value, 'HEX(AES_ENCRYPT(') || str_contains($value, 'encode('))) {
+				$setClauses[] = "$field = $value"; // Directly add the expression to set clauses
+			} else {
+				$setClauses[] = "$field = :$field";
+				$boundParams[":$field"] = $value;
+			}
+		}
+
+		$query = sprintf(
+			"UPDATE %s SET %s %s",
+			$this->query_params['table'],
+			implode(',', $setClauses),
 			$this->query_params['where']
 		);
 
-		$result = $this->query($query, $this->params);
-		$this->params = []; // Reset params
-		return $result->num_rows() > 0;
+		try {
+			$result = $this->query($query, $boundParams);
+			$this->params = []; // Reset params after update
+		} catch (Exception $e) {
+			throw new Exception("Query failed: " . $e->getMessage());
+		}
 	}
 
 	# @ interface : DBSwitch
-	public function delete() : bool {
+	public function delete() : void {
 		if (empty($this->query_params['where'])) {
-			return false;
+			return;
 		}
 
 		$query = sprintf("DELETE FROM %s %s", 
 			$this->query_params['table'], 
 			$this->query_params['where']
 		);
-		$result = $this->query($query);
-		return $result->num_rows() > 0;
+		try {
+			$result = $this->query($query);
+		} catch (Exception $e) {
+			throw new Exception("Query failed: " . $e->getMessage());
+		}
 	}
 
 

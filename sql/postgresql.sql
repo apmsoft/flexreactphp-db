@@ -1,9 +1,11 @@
+# 일반 테스트용 
 CREATE TABLE flex_test (
     id SERIAL PRIMARY KEY,
     signdate TIMESTAMP NOT NULL,
     title VARCHAR(45) NOT NULL
 );
 
+# Join 테스트용 
 CREATE TABLE customers (
     customer_id SERIAL PRIMARY KEY,
     name VARCHAR(50),
@@ -32,4 +34,15 @@ INSERT INTO orders (customer_id, product, amount) VALUES
 (1, 'Phone', 800.00),
 (2, 'Tablet', 500.00),
 (3, 'Monitor', 300.00);
+
+
+#-- pgcrypto 확장 활성화
+# CREATE EXTENSION IF NOT EXISTS pgcrypto;
+# 암호화 테스트용
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(200) NOT NULL,
+    email VARCHAR(200) NOT NULL,
+    passwd VARCHAR(255) NOT NULL
+);
 
