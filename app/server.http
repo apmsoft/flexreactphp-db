@@ -29,13 +29,13 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/mysql/edit
 Content-Type:{{C_TYPE}}
 
-{"id" : 5}
+{"id" : 6}
 
 ### MYSQL update
 POST {{HOST}}/db/mysql/update
 Content-Type:{{C_TYPE}}
 
-{"id" : 5, "title" : "테스트 업데이트3"}
+{"id" : 6, "title" : "테스트 업데이트3"}
 
 ### MYSQL delete
 POST {{HOST}}/db/mysql/delete
@@ -67,13 +67,13 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/pgsql/update
 Content-Type:{{C_TYPE}}
 
-{"id" : 5, "title" : "테스트 업데이트3"}
+{"id" : 8, "title" : "테스트 업데이트3"}
 
 ### POSTGRES delete
 POST {{HOST}}/db/pgsql/delete
 Content-Type:{{C_TYPE}}
 
-{"id" : 5}
+{"id" : 8}
 
 ##### Distinct
 ### mysql 
@@ -115,7 +115,7 @@ POST {{HOST}}/db/pgsql/subquery
 Content-Type:{{C_TYPE}}
 
 #####################
-###### AES CBC 암호화 알고리즘
+###### 암호화 알고리즘
 ####################
 ### MYSQL  List
 POST {{HOST}}/db/cipher/mysql/list
@@ -127,7 +127,7 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/cipher/mysql/insert
 Content-Type:{{C_TYPE}}
 
-{"username":"이름명1", "email":"test1@test.com", "passwd":"passwd12#$"}
+{"username":"이름명2", "email":"test1@test.com", "passwd":"passwd12#$"}
 
 ### MYSQL edit
 POST {{HOST}}/db/cipher/mysql/edit
@@ -142,7 +142,9 @@ Content-Type:{{C_TYPE}}
 {"id":1,"username":"이름1up", "email":"test1@test.com", "passwd":"passwd12#$"}
 
 
-
+#####################
+###### 암호화 알고리즘
+####################
 ### POSTGRES  List
 POST {{HOST}}/db/cipher/pgsql/list
 Content-Type:{{C_TYPE}}
@@ -159,10 +161,10 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/cipher/pgsql/edit
 Content-Type:{{C_TYPE}}
 
-{"id" : 1}
+{"id" : 27}
 
 ### POSTGRES update
 POST {{HOST}}/db/cipher/pgsql/update
 Content-Type:{{C_TYPE}}
 
-{"username":"이름1up", "email":"test1@test.com", "passwd":"passwd12#$"}
+{"id" : 27, "username":"이름27up", "email":"test1@test.com", "passwd":"passwd12#$"}

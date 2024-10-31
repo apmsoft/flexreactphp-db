@@ -7,8 +7,8 @@ use Flex\Banana\Classes\Json\JsonEncoder;
 use Flex\Banana\Classes\Model;
 use Flex\Banana\Utils\Requested;
 
-use My\Topadm\Db\DbManager;
-use My\Topadm\Db\DbSqlAdapter;
+use Flex\Banana\Classes\Db\DbManager;
+use Flex\Banana\Adapters\DbSqlAdapter;
 
 class Db2 extends DbSqlAdapter
 {

@@ -7,9 +7,9 @@ use Flex\Banana\Classes\Json\JsonEncoder;
 use Flex\Banana\Classes\Model;
 use Flex\Banana\Utils\Requested;
 
-use My\Topadm\Db\DbManager;
-use My\Topadm\Db\DbAesCipher;
-use My\Topadm\Db\DbSqlAdapter;
+use Flex\Banana\Classes\Db\DbManager;
+use Flex\Banana\Classes\Db\DbCipherGeneric;
+use Flex\Banana\Adapters\DbSqlAdapter;
 use Flex\Banana\Classes\Paging\Relation;
 use Flex\Banana\Classes\Request\FormValidation as Validation;
 use Flex\Banana\Classes\Cipher\PasswordHash;
@@ -21,15 +21,16 @@ use Flex\Banana\Interfaces\EditUpdateInterface;
 
 class Db3 extends DbSqlAdapter implements ListInterface,InsertInterface,EditUpdateInterface
 {
-    private DbAesCipher $aesCipher;
+    private DbCipherGeneric $dbCipher;
     public function __construct(
         private Requested $requested,
-        DbManager $db
+        DbManager $db,
+        DbCipherGeneric $dbCipher
     ) {
         parent::__construct(db: $db);
 
         # cipher
-        $this->aesCipher = new DbAesCipher('dlrjddksghdhksaksfjl46dlasdfdsajl', $db);
+        $this->dbCipher = $dbCipher;
     }
 
     public function doList(?array $params=[]) : ?string
@@ -66,8 +67,8 @@ class Db3 extends DbSqlAdapter implements ListInterface,InsertInterface,EditUpda
         $rlt = $this->db->table(R::tables('users'))
             ->select(
                 "id", 
-                $this->aesCipher->decrypt("username")." as username",
-                $this->aesCipher->decrypt("email")." as email",
+                $this->dbCipher->decrypt("username")." as username",
+                $this->dbCipher->decrypt("email")." as email",
                 "passwd"
             )
             ->orderBy('id DESC')
@@ -113,14 +114,14 @@ class Db3 extends DbSqlAdapter implements ListInterface,InsertInterface,EditUpda
         # db
         try{
             $this->db->beginTransaction();
-            $this->db["username"] = $this->aesCipher->encrypt($this->requested->username);
-            $this->db["email"]    = $this->aesCipher->encrypt($this->requested->email);
+            $this->db["username"] = $this->dbCipher->encrypt($this->requested->username);
+            $this->db["email"]    = $this->dbCipher->encrypt($this->requested->email);
             $this->db["passwd"]   = (new CipherGeneric(new PasswordHash()))->hash( $this->requested->passwd );
             $this->db->table( R::tables('users') )->insert();
             $this->db->commit();
         }catch(\Exception $e){
             $this->db->rollBack();
-            error_log("Transaction failed: " . $e->getMessage());
+            Log::e("Transaction failed: " . $e->getMessage());
         }
 
         # output
@@ -151,8 +152,8 @@ class Db3 extends DbSqlAdapter implements ListInterface,InsertInterface,EditUpda
         $model->data = $this->db->table( R::tables('users'))
             ->select(
                 "id", 
-                $this->aesCipher->decrypt("username")." as username",
-                $this->aesCipher->decrypt("email")." as email"
+                $this->dbCipher->decrypt("username")." as username",
+                $this->dbCipher->decrypt("email")." as email"
             )
             ->where("id", $this->requested->id)
             ->query()->fetch_assoc();
@@ -198,10 +199,10 @@ class Db3 extends DbSqlAdapter implements ListInterface,InsertInterface,EditUpda
         # db
         try{
             $this->db->beginTransaction();
-            $this->db["username"] = $this->aesCipher->encrypt($this->requested->username);
-            $this->db["email"]    = $this->aesCipher->encrypt($this->requested->email);
+            $this->db["username"] = $this->dbCipher->encrypt($this->requested->username);
+            $this->db["email"]    = $this->dbCipher->encrypt($this->requested->email);
             $this->db["passwd"]   = (new CipherGeneric(new PasswordHash()))->hash( $this->requested->passwd );
-            $this->db->table( R::tables('users') )->where("id", )->update();
+            $this->db->table( R::tables('users') )->where("id", $this->requested->id)->update();
             $this->db->commit();
         }catch(\Exception $e){
             $this->db->rollBack();

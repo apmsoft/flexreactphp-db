@@ -1,7 +1,7 @@
 <?php
-namespace My\Topadm\Db;
+namespace Flex\Banana\Classes\Db;
 
-use My\Topadm\Db\DbSqlResult;
+use Flex\Banana\Classes\Db\DbSqlResult;
 # purpose : 각종 SQL 관련 디비를 통일성있게  작성할 수 있도록 틀을 제공
 interface DbSqlInterface
 {

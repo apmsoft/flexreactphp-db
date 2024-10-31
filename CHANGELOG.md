@@ -1,9 +1,18 @@
 # < 현재 버전 >
 ## -version-code : 3
-## -version-name : v0.1.3
+## -version-name : v0.1.4
 
 
 # dev-main
+- 
+
+# v0.1.4
+### - 2024-10-31
+- flexphp-banana v3.0.6 업데이트
+- test 테이블 view_count 테스트용 퀄럼 추가
+- DB 암호화 제네릭 클래스 등록
+- DB 암호화 MySQLAes256Cbc 클래스 추가
+
 ### - 2024-10-29
 - DB2 테스트 클래스 추가
 - DbManager JOIN 관련 테스트

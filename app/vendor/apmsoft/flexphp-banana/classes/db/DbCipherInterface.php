@@ -1,5 +1,5 @@
 <?php
-namespace My\Topadm\Db;
+namespace Flex\Banana\Classes\Db;
 interface DbCipherInterface
 {
     public function encrypt(string $value): string;

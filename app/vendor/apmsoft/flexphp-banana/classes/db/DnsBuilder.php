@@ -1,7 +1,8 @@
 <?php
-namespace My\Topadm\Db;
+namespace Flex\Banana\Classes\Db;
 
-class DnsBuilder {
+class DnsBuilder 
+{
     private string $dsn_mysql = "mysql:host={host};port={port};dbname={dbname};charset={charset}";
     private string $dsn_pgsql = "pgsql:host={host};port={port};dbname={dbname}";
 

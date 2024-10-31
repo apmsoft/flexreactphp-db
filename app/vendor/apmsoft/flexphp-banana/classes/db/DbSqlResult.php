@@ -1,5 +1,5 @@
 <?php
-namespace My\Topadm\Db;
+namespace Flex\Banana\Classes\Db;
 
 use PDO;
 use PDOStatement;

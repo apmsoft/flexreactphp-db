@@ -20,4 +20,5 @@ enum TestEnum: string implements EnumValueInterface
     case ID       = 'id';
     case TITLE    = 'title';
     case SIGNDATE = 'signdate';
+    case VIEW_COUNT = 'view_count';
 }

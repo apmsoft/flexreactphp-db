@@ -1,8 +1,10 @@
 # 일반 테스트용 
-CREATE TABLE flex_test (
-    id SERIAL PRIMARY KEY,
-    signdate TIMESTAMP NOT NULL,
-    title VARCHAR(45) NOT NULL
+CREATE TABLE public.flex_test (
+	id serial4 NOT NULL,
+	signdate timestamp NOT NULL,
+	title varchar(45) NOT NULL,
+	view_count int4 DEFAULT 0 NOT NULL,
+	CONSTRAINT flex_test_pkey PRIMARY KEY (id)
 );
 
 # Join 테스트용 

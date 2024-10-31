@@ -40,4 +40,16 @@ trait TestEnumTypesTrait
     {
         return (new DateTimez($this->getValue(self::byName('SIGNDATE')->value)))->format($format);
     }
+
+    # VIEW COunt
+    public function setViewCount(string $count): self
+    {
+        $this->setValue(self::byName('VIEW_COUNT')->value, $count);
+        return $this;
+    }
+
+    public function getViewCount(): int
+    {
+        return $this->getValue(self::byName('VIEW_COUNT')->value);
+    }
 }

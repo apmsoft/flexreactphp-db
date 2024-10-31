@@ -7,7 +7,8 @@ use Flex\Banana\Classes\Log;
 use Flex\Banana\Classes\R;
 use Flex\Banana\Classes\Json\JsonEncoder;
 use Flex\Banana\Utils\Requested;
-use My\Topadm\Db\DbManager;
+use Flex\Banana\Classes\Db\DbManager;
+use Flex\Banana\Classes\Db\DbCipherGeneric;
 
 # autoload
 require __DIR__. '/vendor/autoload.php';
@@ -25,6 +26,8 @@ define('DB_PASSWORD', getenv('DB_PASSWORD'));
 define('DB_PORT2', 5432);
 define('DB_PORT', 3306);
 
+define('DB_HASH_KEY', "asdfsadfsafdsafdsafdsafdsafdsafdsafdsa");
+
 Log::d('DB_HOST',DB_HOST);
 Log::d('DB_NAME',DB_NAME);
 Log::d('DB_USERID',DB_USERID);
@@ -39,11 +42,12 @@ $browser = new React\Http\Browser();
 $mysql = (new DbManager("mysql"))
     ->connect(host: DB_HOST, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT, charset:"utf8");
 
-$postgress = (new DbManager("pgsql"))
+
+$pgsql = (new DbManager("pgsql"))
     ->connect(host: DB_HOST2, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT2, charset:"utf8");
 
 # router
-$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($mysql, $postgress)
+$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($mysql, $pgsql)
 {
     # test
     $r->addRoute('GET', '/', function(Requested $requested): string {
@@ -82,98 +86,114 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
     });
 
     # postgres 관련 작업 테스트
-    $r->addGroup('/db/pgsql', function (FastRoute\RouteCollector $r) use ($postgress)
+    $r->addGroup('/db/pgsql', function (FastRoute\RouteCollector $r) use ($pgsql)
     {
-        $r->addRoute('POST', '/list', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db($requested, $postgress))->doList();
+        $r->addRoute('POST', '/list', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db($requested, $pgsql))->doList();
         });
-        $r->addRoute('POST', '/insert', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db($requested, $postgress))->doInsert();
+        $r->addRoute('POST', '/insert', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db($requested, $pgsql))->doInsert();
         });
-        $r->addRoute('POST', '/edit', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db($requested, $postgress))->doEdit();
+        $r->addRoute('POST', '/edit', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db($requested, $pgsql))->doEdit();
         });
-        $r->addRoute('POST', '/update', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db($requested, $postgress))->doUpdate();
+        $r->addRoute('POST', '/update', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db($requested, $pgsql))->doUpdate();
         });
-        $r->addRoute('POST', '/delete', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db($requested, $postgress))->doDelete();
+        $r->addRoute('POST', '/delete', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db($requested, $pgsql))->doDelete();
         });
     });
 
     # Distinct
-    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$postgress)
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$pgsql)
     {
         $r->addRoute('POST', '/mysql/distinct', function(Requested $requested) use ($mysql): string {
             return  (new \My\Service\Test\Db2($requested, $mysql))->doDistinct();
         });
-        $r->addRoute('POST', '/pgsql/distinct', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db2($requested, $postgress))->doDistinct();
+        $r->addRoute('POST', '/pgsql/distinct', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db2($requested, $pgsql))->doDistinct();
         });
     });
 
     # Join
-    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$postgress)
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$pgsql)
     {
         $r->addRoute('POST', '/mysql/join', function(Requested $requested) use ($mysql): string {
             return  (new \My\Service\Test\Db2($requested, $mysql))->doJoin();
         });
-        $r->addRoute('POST', '/pgsql/join', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db2($requested, $postgress))->doJoin();
+        $r->addRoute('POST', '/pgsql/join', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db2($requested, $pgsql))->doJoin();
         });
     });
 
     # GroupBy
-    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$postgress)
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$pgsql)
     {
         $r->addRoute('POST', '/mysql/groupby', function(Requested $requested) use ($mysql): string {
             return  (new \My\Service\Test\Db2($requested, $mysql))->doGroupBy();
         });
-        $r->addRoute('POST', '/pgsql/groupby', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db2($requested, $postgress))->doGroupBy();
+        $r->addRoute('POST', '/pgsql/groupby', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db2($requested, $pgsql))->doGroupBy();
         });
     });
 
     # Sub Query
-    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$postgress)
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$pgsql)
     {
         $r->addRoute('POST', '/mysql/subquery', function(Requested $requested) use ($mysql): string {
             return  (new \My\Service\Test\Db2($requested, $mysql))->doSubQuery();
         });
-        $r->addRoute('POST', '/pgsql/subquery', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db2($requested, $postgress))->doSubQuery();
+        $r->addRoute('POST', '/pgsql/subquery', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db2($requested, $pgsql))->doSubQuery();
         });
     });
 
     # Db Aes Encrypt/Decrypt
-    $r->addGroup('/db/cipher', function (FastRoute\RouteCollector $r) use ($mysql,$postgress)
+    $r->addGroup('/db/cipher', function (FastRoute\RouteCollector $r) use ($mysql,$pgsql)
     {
         # mysql
         $r->addRoute('POST', '/mysql/list', function(Requested $requested) use ($mysql): string {
-            return  (new \My\Service\Test\Db3($requested, $mysql))->doList();
+            return  (new \My\Service\Test\Db3($requested, $mysql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
+            ))->doList();
         });
         $r->addRoute('POST', '/mysql/insert', function(Requested $requested) use ($mysql): string {
-            return  (new \My\Service\Test\Db3($requested, $mysql))->doInsert();
+            return  (new \My\Service\Test\Db3($requested, $mysql,
+                new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
+            ))->doInsert();
         });
         $r->addRoute('POST', '/mysql/edit', function(Requested $requested) use ($mysql): string {
-            return  (new \My\Service\Test\Db3($requested, $mysql))->doEdit();
+            return  (new \My\Service\Test\Db3($requested, $mysql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
+            ))->doEdit();
         });
         $r->addRoute('POST', '/mysql/update', function(Requested $requested) use ($mysql): string {
-            return  (new \My\Service\Test\Db3($requested, $mysql))->doUpdate();
+            return  (new \My\Service\Test\Db3($requested, $mysql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
+            ))->doUpdate();
         });
 
         # pgsql
-        $r->addRoute('POST', '/pgsql/list', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db3($requested, $postgress))->doList();
+        $r->addRoute('POST', '/pgsql/list', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db3($requested, $pgsql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
+            ))->doList();
         });
-        $r->addRoute('POST', '/pgsql/insert', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db3($requested, $postgress))->doInsert();
+        $r->addRoute('POST', '/pgsql/insert', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db3($requested, $pgsql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
+            ))->doInsert();
         });
-        $r->addRoute('POST', '/pgsql/edit', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db3($requested, $postgress))->doEdit();
+        $r->addRoute('POST', '/pgsql/edit', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db3($requested, $pgsql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
+            ))->doEdit();
         });
-        $r->addRoute('POST', '/pgsql/update', function(Requested $requested) use ($postgress): string {
-            return  (new \My\Service\Test\Db3($requested, $postgress))->doUpdate();
+        $r->addRoute('POST', '/pgsql/update', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db3($requested, $pgsql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
+            ))->doUpdate();
         });
 
     });

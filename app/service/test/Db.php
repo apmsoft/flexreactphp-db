@@ -7,8 +7,8 @@ use Flex\Banana\Classes\Json\JsonEncoder;
 use Flex\Banana\Classes\Model;
 use Flex\Banana\Utils\Requested;
 
-use My\Topadm\Db\DbManager;
-use My\Topadm\Db\DbSqlAdapter;
+use Flex\Banana\Classes\Db\DbManager;
+use Flex\Banana\Adapters\DbSqlAdapter;
 use Flex\Banana\Classes\Paging\Relation;
 use Flex\Banana\Classes\Request\FormValidation as Validation;
 use Flex\Banana\Classes\Date\DateTimez;
@@ -20,7 +20,7 @@ use Flex\Banana\Interfaces\DeleteInterface;
 
 use My\Columns\Test\TestEnum;
 
-class Db extends DbSqlAdapter implements ListInterface,EditUpdateInterface,DeleteInterface
+class Db extends DbSqlAdapter implements ListInterface,EditUpdateInterface,InsertInterface,DeleteInterface
 {
     # Enum&Types 인스턴스
     private TestEnum $testEnum;
@@ -70,7 +70,8 @@ class Db extends DbSqlAdapter implements ListInterface,EditUpdateInterface,Delet
             ->select(
                 TestEnum::ID(),
                 TestEnum::TITLE(),
-                TestEnum::SIGNDATE()
+                TestEnum::SIGNDATE(),
+                TestEnum::VIEW_COUNT()
             )
             ->orderBy(TestEnum::ID().' DESC')
             ->limit($paging->qLimitStart, $paging->qLimitEnd)
@@ -79,9 +80,10 @@ class Db extends DbSqlAdapter implements ListInterface,EditUpdateInterface,Delet
         {
             // array push
             $model->data[] = [
-                TestEnum::ID()      => $this->testEnum->setId( (int)$row[TestEnum::ID()] )->getId(),
-                TestEnum::TITLE()   => $this->testEnum->setTitle( $row[TestEnum::TITLE()] )->getTitle(),
-                TestEnum::SIGNDATE()=> $this->testEnum->setSigndate( $row[TestEnum::SIGNDATE()] )->getSigndate()
+                TestEnum::ID()        => $this->testEnum->setId( (int)$row[TestEnum::ID()] )->getId(),
+                TestEnum::TITLE()     => $this->testEnum->setTitle( $row[TestEnum::TITLE()] )->getTitle(),
+                TestEnum::SIGNDATE()  => $this->testEnum->setSigndate( $row[TestEnum::SIGNDATE()] )->getSigndate(),
+                TestEnum::VIEW_COUNT()=> $this->testEnum->setViewCount( (int)$row[TestEnum::VIEW_COUNT()] )->getViewCount(),
             ];
         }
 
@@ -157,6 +159,17 @@ class Db extends DbSqlAdapter implements ListInterface,EditUpdateInterface,Delet
             ->query()->fetch_assoc();
         if(!isset($model->data[TestEnum::ID()])){
             return  JsonEncoder::toJson(["result"=>"false","msg_code"=>"e_db_unenabled", "msg"=>R::sysmsg('e_db_unenabled')]);
+        }
+
+        # db
+        try{
+            $this->db->beginTransaction();
+            $this->db[TestEnum::VIEW_COUNT()] = TestEnum::VIEW_COUNT()."+1";
+            $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->update();
+            $this->db->commit();
+        }catch(\Exception $e){
+            $this->db->rollBack();
+            Log::e($e->getMessage());
         }
 
         # output
