@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'f5355e9e571b68401e974c465f7a93bba4d80dcc',
+        'reference' => '4129eb3b9cdc71b83d1b8702b0752ab72dfe3dda',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'f5355e9e571b68401e974c465f7a93bba4d80dcc',
+            'reference' => '4129eb3b9cdc71b83d1b8702b0752ab72dfe3dda',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'apmsoft/flexphp-banana' => array(
             'pretty_version' => 'v3.0.6',
             'version' => '3.0.6.0',
-            'reference' => '9c2a55b24250312722e60c23f4f0082d6d4d93b8',
+            'reference' => '36fa7baa23f60d895f1684e562c2603490f7306b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../apmsoft/flexphp-banana',
             'aliases' => array(),

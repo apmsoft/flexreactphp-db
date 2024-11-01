@@ -7,18 +7,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/apmsoft/flexphp-banana.git",
-                "reference": "9c2a55b24250312722e60c23f4f0082d6d4d93b8"
+                "reference": "36fa7baa23f60d895f1684e562c2603490f7306b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apmsoft/flexphp-banana/zipball/9c2a55b24250312722e60c23f4f0082d6d4d93b8",
-                "reference": "9c2a55b24250312722e60c23f4f0082d6d4d93b8",
+                "url": "https://api.github.com/repos/apmsoft/flexphp-banana/zipball/36fa7baa23f60d895f1684e562c2603490f7306b",
+                "reference": "36fa7baa23f60d895f1684e562c2603490f7306b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1"
             },
-            "time": "2024-10-31T05:31:30+00:00",
+            "time": "2024-11-01T01:07:51+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {

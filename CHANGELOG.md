@@ -7,6 +7,9 @@
 - 
 
 # v0.1.4
+### - 2024-11-01
+- flexphp-banana v3.0.6 최신버전 업데이트 적용
+
 ### - 2024-10-31
 - flexphp-banana v3.0.6 업데이트
 - test 테이블 view_count 테스트용 퀄럼 추가

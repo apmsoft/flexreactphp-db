@@ -29,19 +29,19 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/mysql/edit
 Content-Type:{{C_TYPE}}
 
-{"id" : 6}
+{"id" : 1}
 
 ### MYSQL update
 POST {{HOST}}/db/mysql/update
 Content-Type:{{C_TYPE}}
 
-{"id" : 6, "title" : "테스트 업데이트3"}
+{"id" : 1, "title" : "테스트 업데이트3"}
 
 ### MYSQL delete
 POST {{HOST}}/db/mysql/delete
 Content-Type:{{C_TYPE}}
 
-{"id" : 5}
+{"id" : 1}
 
 
 
@@ -61,13 +61,13 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/pgsql/edit
 Content-Type:{{C_TYPE}}
 
-{"id" : 5}
+{"id" : 1}
 
 ### POSTGRES update
 POST {{HOST}}/db/pgsql/update
 Content-Type:{{C_TYPE}}
 
-{"id" : 8, "title" : "테스트 업데이트3"}
+{"id" : 1, "title" : "테스트 업데이트3"}
 
 ### POSTGRES delete
 POST {{HOST}}/db/pgsql/delete
@@ -161,10 +161,10 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/cipher/pgsql/edit
 Content-Type:{{C_TYPE}}
 
-{"id" : 27}
+{"id" : 1}
 
 ### POSTGRES update
 POST {{HOST}}/db/cipher/pgsql/update
 Content-Type:{{C_TYPE}}
 
-{"id" : 27, "username":"이름27up", "email":"test1@test.com", "passwd":"passwd12#$"}
+{"id" : 1, "username":"이름27up", "email":"test1@test.com", "passwd":"passwd12#$"}
