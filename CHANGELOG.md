@@ -1,10 +1,14 @@
 # < 현재 버전 >
 ## -version-code : 3
-## -version-name : v0.1.4
+## -version-name : v0.1.5
 
 
 # dev-main
 - 
+
+# v0.1.5
+### - 2024-11-04
+- flexphp-banana v3.0.7 최신버전 업데이트 적용
 
 # v0.1.4
 ### - 2024-11-01

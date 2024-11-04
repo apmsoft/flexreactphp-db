@@ -8,6 +8,8 @@ use Flex\Banana\Classes\R;
 use Flex\Banana\Classes\Json\JsonEncoder;
 use Flex\Banana\Utils\Requested;
 use Flex\Banana\Classes\Db\DbManager;
+use Flex\Banana\Classes\Db\DbMySql;
+use Flex\Banana\Classes\Db\DbPgSql;
 use Flex\Banana\Classes\Db\DbCipherGeneric;
 
 # autoload
@@ -38,13 +40,14 @@ $allowedIps = ['192.168.65.1']; // 허용 IP 주소
 
 # class
 $browser = new React\Http\Browser();
-// $db = (new DbManager("pgsql"))
-$mysql = (new DbManager("mysql"))
-    ->connect(host: DB_HOST, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT, charset:"utf8");
 
+# mysql
+$mysql = new DbManager(new DbMySql());
+$mysql->connect(host: DB_HOST, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT, charset: "utf8");
 
-$pgsql = (new DbManager("pgsql"))
-    ->connect(host: DB_HOST2, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT2, charset:"utf8");
+# pgsql
+$pgsql = new DbManager(new DbPgSql());
+$pgsql->connect(host: DB_HOST2, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT2, charset:"utf8");
 
 # router
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($mysql, $pgsql)
