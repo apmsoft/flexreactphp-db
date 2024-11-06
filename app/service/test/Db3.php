@@ -9,7 +9,9 @@ use Flex\Banana\Utils\Requested;
 
 use Flex\Banana\Classes\Db\DbManager;
 use Flex\Banana\Classes\Db\DbCipherGeneric;
-use Flex\Banana\Adapters\DbSqlAdapter;
+use Flex\Banana\Adapters\DbAdapter;
+use Flex\Banana\Classes\Db\WhereHelper;
+use Flex\Banana\Classes\Db\WhereSql;
 use Flex\Banana\Classes\Paging\Relation;
 use Flex\Banana\Classes\Request\FormValidation as Validation;
 use Flex\Banana\Classes\Cipher\PasswordHash;
@@ -19,7 +21,7 @@ use Flex\Banana\Interfaces\ListInterface;
 use Flex\Banana\Interfaces\InsertInterface;
 use Flex\Banana\Interfaces\EditUpdateInterface;
 
-class Db3 extends DbSqlAdapter implements ListInterface,InsertInterface,EditUpdateInterface
+class Db3 extends DbAdapter implements ListInterface,InsertInterface,EditUpdateInterface
 {
     private DbCipherGeneric $dbCipher;
     public function __construct(
@@ -27,7 +29,7 @@ class Db3 extends DbSqlAdapter implements ListInterface,InsertInterface,EditUpda
         DbManager $db,
         DbCipherGeneric $dbCipher
     ) {
-        parent::__construct(db: $db);
+        parent::__construct(db: $db, whereHelper: new WhereHelper(new WhereSql()));
 
         # cipher
         $this->dbCipher = $dbCipher;

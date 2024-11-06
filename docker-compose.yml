@@ -133,6 +133,44 @@ services:
       timeout: 3s
       retries: 3
 
+  flexreactphp-couchdb:
+    image: couchdb:3.1.1
+    container_name: flexreactphp-couchdb
+    environment:
+      - COUCHDB_USER=${DB_USER}
+      - COUCHDB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - flexreactphp-couchdb-data:/opt/couchdb/data
+    ports:
+      - "59840:5984"
+    networks:
+      - flexreactphp-network
+    mem_limit: 2G
+    cpus: 0.2
+    deploy:
+      resources:
+        limits:
+          cpus: 0.2
+          memory: 2G
+        reservations:
+          cpus: 0.1
+          memory: 1G
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "5"
+        compress: "true"
+        tag: "{{.Name}}"
+        labels: "production"
+        env: "os"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5984"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
 networks:
   flexreactphp-network:
     driver: bridge
@@ -140,3 +178,4 @@ networks:
 volumes:
   flexreactphp-mysql-data:
   flexreactphp-postgres-data:
+  flexreactphp-couchdb-data:

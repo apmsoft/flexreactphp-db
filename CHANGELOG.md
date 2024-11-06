@@ -1,10 +1,16 @@
 # < 현재 버전 >
 ## -version-code : 3
-## -version-name : v0.1.6
+## -version-name : v0.1.7
 
 
 # dev-main
 -
+
+# v0.1.7
+### - 2024-11-06
+- CouchDB 데이터 베이스 추가
+- flexphp-banana v3.0.9 최신버전 업데이트 적용
+- flexphp v3.0.9 버전에 따른 예제 클래스들 업데이트
 
 # v0.1.6
 

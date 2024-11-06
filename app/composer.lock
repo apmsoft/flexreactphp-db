@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b387255af7ee242f50e15a95feefd41b",
+    "content-hash": "b7ba5a807a5c05582e66af343491bdf1",
     "packages": [
         {
             "name": "apmsoft/flexphp-banana",
-            "version": "v3.0.8",
+            "version": "v3.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apmsoft/flexphp-banana.git",
-                "reference": "855a249558556ed9d2c67c0d916a01d9d9ab23b3"
+                "reference": "e13b8d9bf34116b8ab9f709bde9e6d963de56dbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apmsoft/flexphp-banana/zipball/855a249558556ed9d2c67c0d916a01d9d9ab23b3",
-                "reference": "855a249558556ed9d2c67c0d916a01d9d9ab23b3",
+                "url": "https://api.github.com/repos/apmsoft/flexphp-banana/zipball/e13b8d9bf34116b8ab9f709bde9e6d963de56dbf",
+                "reference": "e13b8d9bf34116b8ab9f709bde9e6d963de56dbf",
                 "shasum": ""
             },
             "require": {
@@ -49,9 +49,9 @@
             "homepage": "http://flexphp.fancyupsoft.com",
             "support": {
                 "issues": "https://github.com/apmsoft/flexphp-banana/issues",
-                "source": "https://github.com/apmsoft/flexphp-banana/tree/v3.0.8"
+                "source": "https://github.com/apmsoft/flexphp-banana/tree/v3.0.9"
             },
-            "time": "2024-11-05T06:12:34+00:00"
+            "time": "2024-11-06T04:01:41+00:00"
         },
         {
             "name": "evenement/evenement",

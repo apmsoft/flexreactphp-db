@@ -8,15 +8,17 @@ use Flex\Banana\Classes\Model;
 use Flex\Banana\Utils\Requested;
 
 use Flex\Banana\Classes\Db\DbManager;
-use Flex\Banana\Adapters\DbSqlAdapter;
+use Flex\Banana\Adapters\DbAdapter;
+use Flex\Banana\Classes\Db\WhereHelper;
+use Flex\Banana\Classes\Db\WhereSql;
 
-class Db2 extends DbSqlAdapter
+class Db2 extends DbAdapter
 {
     public function __construct(
         private Requested $requested,
         DbManager $db
     ) {
-        parent::__construct(db: $db);
+        parent::__construct(db: $db, whereHelper: new WhereHelper(new WhereSql()));
     }
 
     # Distinct

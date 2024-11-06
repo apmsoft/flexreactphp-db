@@ -8,7 +8,9 @@ use Flex\Banana\Classes\Model;
 use Flex\Banana\Utils\Requested;
 
 use Flex\Banana\Classes\Db\DbManager;
-use Flex\Banana\Adapters\DbSqlAdapter;
+use Flex\Banana\Adapters\DbAdapter;
+use Flex\Banana\Classes\Db\WhereHelper;
+use Flex\Banana\Classes\Db\WhereSql;
 use Flex\Banana\Classes\Paging\Relation;
 use Flex\Banana\Classes\Request\FormValidation as Validation;
 use Flex\Banana\Classes\Date\DateTimez;
@@ -20,7 +22,7 @@ use Flex\Banana\Interfaces\DeleteInterface;
 
 use My\Columns\Test\TestEnum;
 
-class Db extends DbSqlAdapter implements ListInterface,EditUpdateInterface,InsertInterface,DeleteInterface
+class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertInterface,DeleteInterface
 {
     # Enum&Types 인스턴스
     private TestEnum $testEnum;
@@ -29,7 +31,7 @@ class Db extends DbSqlAdapter implements ListInterface,EditUpdateInterface,Inser
         private Requested $requested,
         DbManager $db
     ) {
-        parent::__construct(db: $db);
+        parent::__construct(db: $db, whereHelper: new WhereHelper(new WhereSql()));
 
         # Enum&Types 인스턴스 생성
         $this->testEnum = TestEnum::create();
