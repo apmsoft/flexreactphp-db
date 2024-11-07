@@ -9,8 +9,6 @@ use Flex\Banana\Utils\Requested;
 
 use Flex\Banana\Classes\Db\DbManager;
 use Flex\Banana\Adapters\DbAdapter;
-use Flex\Banana\Classes\Db\WhereHelper;
-use Flex\Banana\Classes\Db\WhereSql;
 use Flex\Banana\Classes\Paging\Relation;
 use Flex\Banana\Classes\Request\FormValidation as Validation;
 use Flex\Banana\Classes\Date\DateTimez;
@@ -31,7 +29,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
         private Requested $requested,
         DbManager $db
     ) {
-        parent::__construct(db: $db, whereHelper: new WhereHelper(new WhereSql()));
+        parent::__construct(db: $db);
 
         # Enum&Types 인스턴스 생성
         $this->testEnum = TestEnum::create();
@@ -62,7 +60,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
 
         # total record
         $model->total_record = $this->db->table(R::tables('test'))->total();
-
+        Log::d("model->total_record",$model->total_record);
         # pageing
         $paging = new Relation( totalRecord: $model->total_record, page: $model->page );
         $relation = $paging->query( pagecount: $model->page_count , blockLimit: $model->block_limit )->build()->paging();
@@ -82,7 +80,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
         {
             // array push
             $model->data[] = [
-                TestEnum::ID()        => $this->testEnum->setId( (int)$row[TestEnum::ID()] )->getId(),
+                TestEnum::ID()        => $this->testEnum->setId( $row[TestEnum::ID()] )->getId(),
                 TestEnum::TITLE()     => $this->testEnum->setTitle( $row[TestEnum::TITLE()] )->getTitle(),
                 TestEnum::SIGNDATE()  => $this->testEnum->setSigndate( $row[TestEnum::SIGNDATE()] )->getSigndate(),
                 TestEnum::VIEW_COUNT()=> $this->testEnum->setViewCount( (int)$row[TestEnum::VIEW_COUNT()] )->getViewCount(),
@@ -122,8 +120,9 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
         # db
         try{
             $this->db->beginTransaction();
-            $this->db[TestEnum::TITLE()]    = $this->requested->title;
-            $this->db[TestEnum::SIGNDATE()] = (new DateTimez("now"))->format('Y-m-d H:i:s');
+            $this->db[TestEnum::TITLE()]      = $this->requested->title;
+            $this->db[TestEnum::SIGNDATE()]   = (new DateTimez("now"))->format('Y-m-d H:i:s');
+            $this->db[TestEnum::VIEW_COUNT()] = 0;
             $this->db->table( R::tables('test') )->insert();
             $this->db->commit();
         }catch(\Exception $e){
@@ -145,7 +144,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
 
         # Validation
         try{
-            (new Validation('id', R::strings('id'),$this->requested->id))->null()->number();
+            (new Validation('id', R::strings('id'),$this->requested->id))->null()->disliking([]);
         }catch(\Exception $e){
             Log::e( $e->getMessage());
             return $e->getMessage();
@@ -155,24 +154,37 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
         $model = new Model($params);
         $model->data = [];
 
-        # check data db
-        $model->data = $this->db->table( R::tables('test'))
-            ->where(TestEnum::ID(), $this->requested->id)
-            ->query()->fetch_assoc();
-        if(!isset($model->data[TestEnum::ID()])){
-            return  JsonEncoder::toJson(["result"=>"false","msg_code"=>"e_db_unenabled", "msg"=>R::sysmsg('e_db_unenabled')]);
-        }
+        Log::d($this->db->table( R::tables('test'))->where(TestEnum::ID(), $this->requested->id)->query);
 
-        # db
-        try{
-            $this->db->beginTransaction();
-            $this->db[TestEnum::VIEW_COUNT()] = TestEnum::VIEW_COUNT()."+1";
-            $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->update();
-            $this->db->commit();
-        }catch(\Exception $e){
-            $this->db->rollBack();
-            Log::e($e->getMessage());
-        }
+        # check data db
+        // $model->data = $this->db->table( R::tables('test'))
+        //     ->where(TestEnum::ID(), $this->requested->id)
+        //     ->query()->fetch_assoc();
+        // if(!isset($model->data[TestEnum::ID()])){
+        //     return  JsonEncoder::toJson(["result"=>"false","msg_code"=>"e_db_unenabled", "msg"=>R::sysmsg('e_db_unenabled')]);
+        // }
+
+        // $where1 = $this->db->whereHelper
+        //     ->begin('OR') // 첫 번째 OR 그룹 시작
+        //         ->case('category', '=', 'dp00')
+        //         ->case('category', '=', 'dp01')
+        //     ->end() // 첫 번째 OR 그룹 종료
+        //     ->begin('OR') // 두 번째 OR 그룹 시작
+        //         ->case('title', 'LIKE', ['이순신', '대통령']) // LIKE 조건 처리
+        //     ->end() // 두 번째 OR 그룹 종료
+        //     ->where;
+        // Log::d($where1);
+
+        // # db
+        // try{
+        //     $this->db->beginTransaction();
+        //     $this->db[TestEnum::VIEW_COUNT()] = TestEnum::VIEW_COUNT()."+1";
+        //     $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->update();
+        //     $this->db->commit();
+        // }catch(\Exception $e){
+        //     $this->db->rollBack();
+        //     Log::e($e->getMessage());
+        // }
 
         # output
         return JsonEncoder::toJson([
@@ -188,7 +200,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
 
         # Validation
         try{
-            (new Validation('id', R::strings('id'),$this->requested->id))->null()->number();
+            (new Validation('id', R::strings('id'),$this->requested->id))->null()->disliking([]);
             (new Validation('title', R::strings('title'),$this->requested->title))->null();
         }catch(\Exception $e){
             Log::e( $e->getMessage());
@@ -208,15 +220,15 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
         }
 
         # db
-        try{
-            $this->db->beginTransaction();
-            $this->db[TestEnum::TITLE()]  = $this->requested->title;
-            $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->update();
-            $this->db->commit();
-        }catch(\Exception $e){
-            $this->db->rollBack();
-            Log::e($e->getMessage());
-        }
+        // try{
+        //     $this->db->beginTransaction();
+        //     $this->db[TestEnum::TITLE()]  = $this->requested->title;
+        //     $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->update();
+        //     $this->db->commit();
+        // }catch(\Exception $e){
+        //     $this->db->rollBack();
+        //     Log::e($e->getMessage());
+        // }
 
         # output
         return JsonEncoder::toJson([

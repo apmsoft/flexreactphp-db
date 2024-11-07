@@ -12,6 +12,9 @@ GET {{HOST}}/service/test
 ###
 GET {{HOST}}/service/r
 
+
+
+
 ######## DB test_db.flex_test table
 ### MYSQL  List
 POST {{HOST}}/db/mysql/list
@@ -45,6 +48,7 @@ Content-Type:{{C_TYPE}}
 
 
 
+
 ### POSTGRES  List
 POST {{HOST}}/db/pgsql/list
 Content-Type:{{C_TYPE}}
@@ -74,6 +78,42 @@ POST {{HOST}}/db/pgsql/delete
 Content-Type:{{C_TYPE}}
 
 {"id" : 8}
+
+
+
+
+### CouchDB  List
+POST {{HOST}}/db/couchdb/list
+Content-Type:{{C_TYPE}}
+
+{"page":1,"q":""}
+
+### CouchDB insert
+POST {{HOST}}/db/couchdb/insert
+Content-Type:{{C_TYPE}}
+
+{"title" : "테스트"}
+
+### **** CouchDB edit
+POST {{HOST}}/db/couchdb/edit
+Content-Type:{{C_TYPE}}
+
+{"id" : "2ff22088e34b6d7aad460f15bd005d42"}
+
+### CouchDB update
+POST {{HOST}}/db/couchdb/update
+Content-Type:{{C_TYPE}}
+
+{"id" :"2ff22088e34b6d7aad460f15bd005d42", "title" : "테스트 업데이트3"}
+
+### CouchDB delete
+POST {{HOST}}/db/couchdb/delete
+Content-Type:{{C_TYPE}}
+
+{"_id" : 8}
+
+
+
 
 ##### Distinct
 ### mysql 

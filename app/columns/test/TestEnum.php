@@ -17,7 +17,7 @@ enum TestEnum: string implements EnumValueInterface
 
     # 사용자 정의 Enum 퀄럼명 정의
     # Columns
-    case ID       = 'id';
+    case ID       = '_id';
     case TITLE    = 'title';
     case SIGNDATE = 'signdate';
     case VIEW_COUNT = 'view_count';

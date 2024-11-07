@@ -1,15 +1,16 @@
 <?php
 namespace Flex\Banana\Classes\Db;
 
-use Flex\Banana\Classes\Db\SqlQueryBuilderAbstract;
-use Flex\Banana\Classes\Db\DbSqlResult;
+use Flex\Banana\Classes\Db\QueryBuilderAbstractSql;
+use Flex\Banana\Classes\Db\DbResultSql;
 use Flex\Banana\Classes\Db\DbInterface;
+use Flex\Banana\Classes\Db\WhereHelper;
 use \PDO;
 use \PDOException;
 use \Exception;
 use \ArrayAccess;
 
-class DbPgSql extends SqlQueryBuilderAbstract implements DbInterface,ArrayAccess
+class DbPgSql extends QueryBuilderAbstractSql implements DbInterface,ArrayAccess
 {
 	public const __version = '0.1.3';
 	private const DSN = "pgsql:host={host};port={port};dbname={dbname}";
@@ -21,7 +22,9 @@ class DbPgSql extends SqlQueryBuilderAbstract implements DbInterface,ArrayAccess
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ];
 
-	public function __construct(){}
+	public function __construct(
+		public WhereHelper $whereHelper
+	){}
 
 	# @ DbSqlInterface
     public function connect(string $host, string $dbname, string $user, string $password, int $port, string $charset, ?array $options=[]) : self
@@ -53,7 +56,7 @@ class DbPgSql extends SqlQueryBuilderAbstract implements DbInterface,ArrayAccess
 	}
 
 	# @ DbSqlInterface
-	public function query(string $query = '', array $params = []): DbSqlResult
+	public function query(string $query = '', array $params = []): DbResultSql
 	{
 		if (!$query) {
 			$query = $this->query = parent::get();
@@ -69,7 +72,7 @@ class DbPgSql extends SqlQueryBuilderAbstract implements DbInterface,ArrayAccess
 				throw new Exception("Execution failed: " . implode(", ", $stmt->errorInfo()));
 			}
 
-			return new DbSqlResult($stmt);
+			return new DbResultSql($stmt);
 		} catch (PDOException $e) {
 			throw new Exception("Query failed: " . $e->getMessage());
 		}
@@ -158,8 +161,8 @@ class DbPgSql extends SqlQueryBuilderAbstract implements DbInterface,ArrayAccess
 			throw new Exception("Empty parameters or WHERE clause is missing");
 		}
 
-		$query = sprintf("DELETE FROM %s %s", 
-			$this->query_params['table'], 
+		$query = sprintf("DELETE FROM %s %s",
+			$this->query_params['table'],
 			$this->query_params['where']
 		);
 		try {

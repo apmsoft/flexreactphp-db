@@ -6,13 +6,13 @@ use Flex\Banana\Classes\Date\DateTimez;
 trait TestEnumTypesTrait
 {
     # ID
-    public function setId(int $id): self
+    public function setId(mixed $id): self
     {
         $this->setValue(self::byName('ID')->value, $id);
         return $this;
     }
 
-    public function getId(): ?int
+    public function getId(): mixed
     {
         return $this->getValue(self::byName('ID')->value) ?? null;
     }

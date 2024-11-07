@@ -13,6 +13,7 @@ class DbManager implements ArrayAccess
     private static $allowedProcessors = [
         DbMySql::class,
         DbPgSql::class,
+        DbCouch::class,
     ];
 
     public function __construct($processor)
@@ -70,12 +71,12 @@ class DbManager implements ArrayAccess
 
     public function __get(string $propertyName)
     {
-        return $this->processor->$propertyName;
+        return $this->processor->__get($propertyName);
     }
 
     public function __set(string $propertyName, mixed $value)
     {
-        return $this->processor->$propertyName = $value;
+        return $this->processor->__set($propertyName,$value);
     }
 
     public static function addProcessor(string $processorClass): void
