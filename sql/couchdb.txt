@@ -1,0 +1,12 @@
+1. _users 데이터 베이스 생성
+2. flex_test 데이터 베이스 생성
+3. flex_test 데이터 베이스 index key 생성
+{
+   "index": {
+      "fields": [
+         "_id"
+      ]
+   },
+   "name": "_id-json-index",
+   "type": "json"
+}

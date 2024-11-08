@@ -1,11 +1,16 @@
 # < 현재 버전 >
 ## -version-code : 3
-## -version-name : v0.1.7
+## -version-name : v0.1.8
 
 
 # dev-main
-- CouchDB 데이터 베이스 클래스 작업
-- WhereCouch,WhereSql 정확하게 명시하도록 Db 클래스들 업데이트
+-
+
+# v0.1.8
+- CouchDB 관련 sql/couchdb.txt 추가
+- flexphp-banana v3.1.0 최신버전 업데이트 적용
+- CouchDB 관련 예제 추가
+- server.php 없데이트
 
 # v0.1.7
 ### - 2024-11-06

@@ -56,4 +56,3 @@ class Requested
 		return isset($this->params[$name]);
 	}
 }
-?>
