@@ -20,7 +20,7 @@ GET {{HOST}}/service/r
 POST {{HOST}}/db/mysql/list
 Content-Type:{{C_TYPE}}
 
-{"page":1,"q":""}
+{"page":1,"q":"테스트"}
 
 ### MYSQL insert
 POST {{HOST}}/db/mysql/insert
@@ -94,23 +94,26 @@ Content-Type:{{C_TYPE}}
 
 {"title" : "테스트"}
 
-### **** CouchDB edit
+### CouchDB edit
 POST {{HOST}}/db/couchdb/edit
 Content-Type:{{C_TYPE}}
 
-{"id" : "2ff22088e34b6d7aad460f15bd005d42"}
+{"id" : "fbfb492a74f22cb3a7615ca25e007fc8"}
 
 ### CouchDB update
 POST {{HOST}}/db/couchdb/update
 Content-Type:{{C_TYPE}}
 
-{"id" :"2ff22088e34b6d7aad460f15bd005d42", "title" : "테스트 업데이트3"}
+{
+    "id" :"fbfb492a74f22cb3a7615ca25e007fc8", 
+    "title" : "테스트 업데이트4"
+}
 
 ### CouchDB delete
 POST {{HOST}}/db/couchdb/delete
 Content-Type:{{C_TYPE}}
 
-{"_id" : 8}
+{"id" : "fbfb492a74f22cb3a7615ca25e007eb2"}
 
 
 

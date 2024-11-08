@@ -51,7 +51,7 @@ INSERT INTO orders (customer_id, product, amount) VALUES
 #    END;
 # 암호화 테스트용
 CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    _id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(200) NOT NULL,
     email VARCHAR(200) NOT NULL,
     passwd VARCHAR(255) NOT NULL

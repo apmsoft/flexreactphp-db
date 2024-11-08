@@ -1,6 +1,5 @@
 <?php
 namespace Flex\Banana\Classes\Db;
-use Flex\Banana\Classes\Log;
 
 class DbResultCouch {
     private $result;
@@ -9,7 +8,6 @@ class DbResultCouch {
     private $numRows;
 
     public function __construct(string|array $result) {
-        Log::d('DbResultCouch', $result);
         if(!is_array($result)){
             try {
                 $result = json_decode($result, true);

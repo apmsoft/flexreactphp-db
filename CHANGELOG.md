@@ -4,7 +4,8 @@
 
 
 # dev-main
--
+- CouchDB 데이터 베이스 클래스 작업
+- WhereCouch,WhereSql 정확하게 명시하도록 Db 클래스들 업데이트
 
 # v0.1.7
 ### - 2024-11-06

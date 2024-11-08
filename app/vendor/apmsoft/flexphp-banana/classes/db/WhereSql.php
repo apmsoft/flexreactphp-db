@@ -104,20 +104,16 @@ class WhereSql implements WhereInterface
 
 	# 상속한 부모 프라퍼티 값 포함한 가져오기
 	public function __get($propertyName){
-		if(property_exists(__CLASS__,$propertyName))
-		{
-			if($propertyName == 'where'){
-				#아직 종료되지 않은 begin end가 있는지 체크
-				if($this->current_group){
-					$this->end();
-				}
-				$this->where = (count($this->where_groups_data)) ? "(" . implode ( ") {$this->coord} (", $this->where_groups_data ) . ")" : '';
-				$this->init();
+		if($propertyName == 'where'){
+			#아직 종료되지 않은 begin end가 있는지 체크
+			if($this->current_group){
+				$this->end();
 			}
-
-			return $this->{$propertyName};
+			$this->where = (count($this->where_groups_data)) ? "(" . implode ( ") {$this->coord} (", $this->where_groups_data ) . ")" : '';
+			$this->init();
 		}
-		return "";
+
+		return $this->{$propertyName};
 	}
 
 	# 초기화

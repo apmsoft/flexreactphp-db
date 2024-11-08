@@ -1,33 +1,33 @@
 <?php
 namespace Flex\Banana\Classes\Db;
-use Flex\Banana\Classes\Json\JsonEncoder;
 
+use Flex\Banana\Classes\Db\WhereCouch;
+use Flex\Banana\Classes\Log;
 abstract class QueryBuilderAbstractCouch
 {
-    public const __version = '1.0.0';
+    public const __version = '0.0.2';
     protected array $query_params;
-    protected WhereCouch $whereCouch;
 
     protected const _QUERY_INIT_PARAMS_ = [
-        'selector' => [],
-        'fields' => [],
-        'sort' => [],
-        'limit' => null,
-        'skip' => null,
+        'selector'  => ["_id" => ['$gt' => null]],
+        'fields'    => [],
+        'sort'      => [],
+        'limit'     => null,
+        'skip'      => null,
         'use_index' => null
     ];
 
-    public function __construct()
+    public function __construct(
+        protected WhereCouch $whereCouch
+    )
     {
         $this->init();
-        $this->whereCouch = new WhereCouch();
     }
 
     abstract public function table(...$tables) : mixed;
     abstract public function select(...$columns) : mixed;
     abstract public function where(...$where) : mixed;
     abstract public function orderBy(...$orderby) : mixed;
-    // abstract public function on(...$on) : mixed;
     abstract public function limit(...$limit) : mixed;
     abstract public function total(string $column_name) : int;
     abstract public function useIndex(...$index): self;
@@ -35,11 +35,13 @@ abstract class QueryBuilderAbstractCouch
     public function init(): void
     {
         $this->query_params = self::_QUERY_INIT_PARAMS_;
-        $this->whereBuilder = new WhereCouch();
     }
 
     public function set(string $key, $value): void
     {
+        if($key == 'selector'){
+            $this->query_params[$key] = new \stdClass();
+        }
         $this->query_params[$key] = $value;
     }
 
@@ -47,10 +49,15 @@ abstract class QueryBuilderAbstractCouch
     {
         $query = [];
         foreach ($this->query_params as $key => $value) {
-            if ($value !== null && count($value)) {
-                $query[$key] = $value;
+            if ($value !== null) {
+                if($key == 'sort'){
+                    if(!empty($this->query_params[$key])){
+                        $query[$key] = $value;
+                    }
+                }else $query[$key] = $value;
             }
         }
+
         return $query;
     }
 
@@ -68,18 +75,18 @@ abstract class QueryBuilderAbstractCouch
         return trim(strtr($tpl, $render_args));
     }
 
-    protected function buildWhere(...$conditions): array
+    protected function buildWhere(array $conditions): array
     {
+        $this->whereCouch->__construct();
         $this->whereCouch->begin('and');
-        foreach ($conditions as $condition) {
-            if (is_array($condition) && count($condition) >= 2) {
-                if (count($condition) == 2) {
-                    $this->whereCouch->case($condition[0], '=', $condition[1]);
-                } elseif (count($condition) == 3) {
-                    $this->whereCouch->case($condition[0], $condition[1], $condition[2]);
-                }
+        if (is_array($conditions) && count($conditions) >= 2) {
+            if (count($conditions) == 2) {
+                $this->whereCouch->case($conditions[0], '=', $conditions[1]);
+            } elseif (count($conditions) == 3) {
+                $this->whereCouch->case($conditions[0], $conditions[1], $conditions[2]);
             }
         }
-        return $this->whereCouch->where;
+        $this->whereCouch->end();
+        return $this->whereCouch->__get('where');
     }
 }

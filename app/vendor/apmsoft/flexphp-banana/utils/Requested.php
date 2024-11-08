@@ -42,7 +42,6 @@ class Requested
 
 	public function __get($propertyName) : mixed
 	{
-		echo '>>>'.$propertyName.PHP_EOL;
 		if(isset($this->params[$propertyName])){
 			return $this->params[$propertyName];
 		}

@@ -6,7 +6,7 @@ use Flex\Banana\Classes\Json\JsonEncoder;
 use Flex\Banana\Classes\Db\DbResultCouch;
 use Flex\Banana\Classes\Db\DbInterface;
 use Flex\Banana\Classes\Http\HttpRequest;
-use Flex\Banana\Classes\Db\WhereHelper;
+use Flex\Banana\Classes\Array\ArrayHelper;
 use \Exception;
 use \ArrayAccess;
 
@@ -21,15 +21,16 @@ class DbCouch extends QueryBuilderAbstractCouch implements DbInterface, ArrayAcc
     private array $params = [];
 
     public function __construct(
-        public WhereHelper $whereHelper
+        WhereCouch $whereCouch
     )
     {
-        $this->init();
+        parent::__construct($whereCouch);
         $this->baseUrl = '';
         $this->authHeader = '';
         $this->database = '';
     }
 
+    # @ DbSqlInterface
     public function connect(string $host, string $dbname, string $user, string $password, int $port, string $charset, ?array $options = []): self
     {
         $this->baseUrl = $this->bindingDNS(self::BASE_URL, [
@@ -38,7 +39,6 @@ class DbCouch extends QueryBuilderAbstractCouch implements DbInterface, ArrayAcc
         ]);
 
         $this->authHeader = "Authorization: Basic " . base64_encode("$user:$password");
-
         $httpRequest = new HttpRequest();
         $httpRequest->set($this->baseUrl, "", [$this->authHeader,"Content-Type: application/json"]);
         $httpRequest->get(function($response) {
@@ -49,109 +49,31 @@ class DbCouch extends QueryBuilderAbstractCouch implements DbInterface, ArrayAcc
     return $this;
     }
 
+    # @ DbSqlInterface
     public function selectDB(string $dbname): self
     {
         $httpRequest = new HttpRequest();
         $dbUrl = $this->baseUrl . "/$dbname";
-        $httpRequest->set($dbUrl, "", [$this->authHeader,"Content-Type: application/json"]);
-        $httpRequest->get(function($response) use ($dbname) {
-            if (empty($response) || isset($response[0]['error'])) {
-                throw new Exception("Failed to connect to database '$dbname'");
-            }
-        });
-        $this->database = $dbname;
-        return $this;
-    }
-
-    public function createDatabase(string $dbname): void
-    {
-        $httpRequest = new HttpRequest();
-        $dbUrl = $this->baseUrl . "/$dbname";
-        $httpRequest->set($dbUrl, "", [$this->authHeader,"Content-Type: application/json"]);
-        $httpRequest->put(function($response) use ($dbname) {
-            if (empty($response) || isset($response[0]['error'])) {
-                throw new Exception("Failed to create database '$dbname'");
-            }
-        });
-    }
-
-    public function total(string $column_name = '_id'): int
-    {
-        $query = $this->get();
-        $query['fields'] = [$column_name];
-        $query['limit'] = 1;
-
-        Log::d('total', $query);
-
-        $result = $this->query(JsonEncoder::toJson($query));
-        Log::d('total result',$result);
-        $totalCount = $result->total_rows ?? count($result->docs ?? []);
-
-        return (int)$totalCount;
-    }
-
-    public function table(...$tables): self
-    {
-        $this->selectDB($tables[0]);
-        return $this;
-    }
-
-    public function select(...$columns) : self{
-		if(count($columns) == 1){
-            if(strpos($columns,",") !==false) {
-                $columns = explode(",", $columns);
-            }
-        }
-		$this->set('fields', $columns);
-	return $this;
-	}
-
-    public function where(...$where): self
-    {
-        // Implement where method
-        $result = $this->buildWhere(...$where);
-		if($result){
-			$this->set('selector', $result);
-		}
-    return $this;
-    }
-
-    public function orderBy(...$orderby): self
-    {
-        // Implement orderBy method
-        $sort = [];
-        foreach ($orderby as $field) {
-            $direction = 'asc';
-            $field = strtolower($field);
-            if (strpos($field, ' desc') !== false) {
-                $field = str_replace(' desc', '', $field);
-                $direction = 'desc';
-            }
-            $sort[] = [$field => $direction];
-        }
-        $this->set('sort', $sort);
-        return $this;
-    }
-
-    public function limit(...$limit): self
-    {
-        // Implement limit method
-        if (isset($limit[1])) {
-            $this->set('skip', $limit[0]);
-            $this->set('limit', $limit[1]);
-        } else {
-            $this->set('limit', $limit[0]);
+        if($this->database != $dbname){
+            $httpRequest->set($dbUrl, "", [$this->authHeader,"Content-Type: application/json"]);
+            $httpRequest->get(function($response) use ($dbname) {
+                if (empty($response) || isset($response[0]['error'])) {
+                    throw new Exception("Failed to connect to database '$dbname'");
+                }
+            });
+            $this->database = $dbname;
         }
         return $this;
     }
 
-    public function useIndex(...$index): self
+    # @ DbSqlInterface
+    public function whereHelper(): WhereCouch
     {
-        // Implement useIndex method
-        $this->set('use_index', $index);
-        return $this;
+        return $this->whereCouch;
     }
 
+
+    # @ DbSqlInterface
     public function query(string $query = '', array $params = []): DbResultCouch
     {
         if (!$query) {
@@ -173,6 +95,7 @@ class DbCouch extends QueryBuilderAbstractCouch implements DbInterface, ArrayAcc
         return $result;
     }
 
+    # @ DbSqlInterface
     public function insert(): void
     {
         if (empty($this->params)) {
@@ -189,78 +112,197 @@ class DbCouch extends QueryBuilderAbstractCouch implements DbInterface, ArrayAcc
         });
     }
 
+    # @ DbSqlInterface
     public function update(): void
     {
-        if (empty($this->params) || empty($this->selector)) {
+        if (empty($this->params)) {
             throw new Exception("Empty parameters or selector is missing");
         }
-        Log::d('update params', $this->params);
 
-        // Use the query function to find documents
-        $queryResult = $this->query(JsonEncoder::toJson(['selector' => $this->selector]));
-
-        // Check if any documents were found
-        if (empty($queryResult->docs)) {
-            throw new Exception("No documents found for the given selector");
-        }
-
-        foreach ($queryResult->docs as $doc) 
+        # where 문에서 _id 값 찾기
+        if(!isset($this->params['_id']))
         {
-            // Merge the existing document with the new parameters
-            $updateDoc = array_merge($doc, $this->params);
-            
-            // Ensure the _rev is included in the update document
-            if (isset($doc['_rev'])) {
-                $updateDoc['_rev'] = $doc['_rev'];
-            } else {
-                throw new Exception("Document revision (_rev) is missing");
+            $selectors = (isset($this->query_params['selector']['$and'])) ? $this->query_params['selector']['$and']: $this->query_params['selector'];
+            $wheres = (new ArrayHelper($selectors))->select("_id")->value;
+            if(!isset($wheres[0]) || !isset($wheres[0]['_id'])){
+                throw new Exception("Empty _id is missing");
             }
 
-            // Prepare the update request
-            $updateUrl = $this->baseUrl . "/$this->database/" . $doc['_id'];
-            $httpRequestForUpdate = new HttpRequest();
-            $httpRequestForUpdate->set($updateUrl, JsonEncoder::toJson($updateDoc), [$this->authHeader, "Content-Type: application/json"]);
-            
-            // Update document
-            $httpRequestForUpdate->put(function($updateResponse) {
-                if (empty($updateResponse) || isset($updateResponse[0]['error'])) {
-                    throw new Exception("Update failed: " . ($updateResponse[0]['error'] ?? 'Unknown error'));
-                }
-            });
+            $_id = array_values($wheres[0]['_id'])[0];
+            $this->params['_id'] = $_id;
         }
 
-        // Clear params after processing
-        $this->params = [];
-    }
-
-    public function delete(): void
-    {
-        if (empty($this->selector)) {
-            throw new Exception("Selector is missing");
+        # _id 값만 추출하기 및 fields 등록
+        if(!isset($this->params['_id'])){
+            throw new Exception("Empty _id value is missing");
         }
 
+        # _rev 가 있는지 체크
+        if(!isset($this->params['_rev'])){
+            throw new Exception("Empty _rev is missing");
+        }
+
+        # update
         $httpRequest = new HttpRequest();
-        $url = $this->baseUrl . "/$this->database/_find";
-        $findQuery = JsonEncoder::toJson(['selector' => $this->selector]);
-        $httpRequest->set($url, $findQuery, [$this->authHeader,"Content-Type: application/json; charset=utf-8"]);
-
-        $httpRequest->post(function($response) 
-        {
-            $docs = json_decode($response[0], true)['docs'] ?? [];
-            foreach ($docs as $doc) 
-            {
-                $httpRequest = new HttpRequest();
-                $deleteUrl = $this->baseUrl . "/$this->database/" . $doc['_id'] . "?rev=" . $doc['_rev'];
-                $httpRequest->set($deleteUrl, "",[$this->authHeader]);
-                $httpRequest->delete(function($deleteResponse) {
-                    if (empty($deleteResponse) || isset($deleteResponse[0]['error'])) {
-                        throw new Exception("Delete failed: " . ($deleteResponse[0]['error'] ?? 'Unknown error'));
-                    }
-                });
+        $url = $this->baseUrl . "/{$this->database}". "/{$this->params['_id']}";
+        $httpRequest->set($url, JsonEncoder::toJson($this->params), [$this->authHeader, "Content-Type: application/json"]);
+        $httpRequest->put(function($response) {
+            if (empty($response) || isset($response[0]['error'])) {
+                throw new Exception("Update failed: " . ($response[0]['error'] ?? 'Unknown error'));
             }
         });
+    }
 
-        $this->selector = new \stdClass();
+    # @ DbSqlInterface
+    public function delete(): void
+    {
+        if (empty($this->params)) {
+            throw new Exception("Empty parameters or selector is missing");
+        }
+
+        # where 문에서 _id 값 찾기
+        if(!isset($this->params['_id'])){
+            $selectors = (isset($this->query_params['selector']['$and'])) ? $this->query_params['selector']['$and']: $this->query_params['selector'];
+            $wheres = (new ArrayHelper($selectors))->select("_id")->value;
+            if(!isset($wheres[0]) || !isset($wheres[0]['_id'])){
+                throw new Exception("Empty _id is missing");
+            }
+
+            $_id = array_values($wheres[0]['_id'])[0];
+            $this->params['_id'] = $_id;
+        }
+
+        # _id 값만 추출하기 및 fields 등록
+        if(!isset($this->params['_id'])){
+            throw new Exception("Empty _id value is missing");
+        }
+
+        # _rev 가 있는지 체크
+        if(!isset($this->params['_rev'])){
+            throw new Exception("Empty _rev is missing");
+        }
+        $this->params['_deleted'] = true;
+
+        parent::init();
+
+        # update
+        $httpRequest = new HttpRequest();
+        $url = $this->baseUrl . "/{$this->database}". "/{$this->params['_id']}";
+        $httpRequest->set($url, JsonEncoder::toJson($this->params), [$this->authHeader, "Content-Type: application/json"]);
+        $httpRequest->put(function($response) {
+            if (empty($response) || isset($response[0]['error'])) {
+                throw new Exception("Update failed: " . ($response[0]['error'] ?? 'Unknown error'));
+            }
+        });
+    }
+
+    public function createDatabase(string $dbname): void
+    {
+        $httpRequest = new HttpRequest();
+        $dbUrl = $this->baseUrl . "/$dbname";
+        $httpRequest->set($dbUrl, "", [$this->authHeader,"Content-Type: application/json"]);
+        $httpRequest->put(function($response) use ($dbname) {
+            if (empty($response) || isset($response[0]['error'])) {
+                throw new Exception("Failed to create database '$dbname'");
+            }
+        });
+    }
+
+    # @ QueryBuilderAbstractCouch
+    public function total(string $column_name = '_id'): int
+    {
+        $this->set('fields', [$column_name]);
+        $this->set('limit', 1);
+        $query = $this->get();
+        $query['execution_stats'] = true;
+
+        $result = $this->query(JsonEncoder::toJson($query));
+
+        if ($result instanceof DbResultCouch) {
+            $executionStats = $result->get_execution_stats();
+            if (is_array($executionStats) && isset($executionStats['total_docs'])) {
+                return (int)$executionStats['total_docs'];
+            }
+        }
+
+        // 실행 통계를 얻지 못한 경우, 전체 문서를 가져와서 카운트
+        $this->init(); // 쿼리 파라미터 초기화
+        $this->set('fields', ['_id']);
+        $allDocsResult = $this->query(JsonEncoder::toJson($this->get()));
+
+        return $allDocsResult->num_rows();
+    }
+
+    # @ QueryBuilderAbstractCouch
+    public function table(...$tables): self
+    {
+        $this->selectDB($tables[0]);
+        return $this;
+    }
+
+    # @ QueryBuilderAbstractCouch
+    public function select(...$columns) : self{
+		if(count($columns) == 1){
+            if(strpos($columns[0],",") !==false) {
+                $columns = explode(",", $columns[0]);
+            }
+        }
+        if($columns[0] != '*'){
+            if(!in_array('_rev',$columns)){
+                $columns[] = '_rev';
+            }
+            $this->set('fields', $columns);
+        }
+	return $this;
+	}
+
+    # @ QueryBuilderAbstractCouch
+    public function where(...$where): self
+    {
+        $result = null;
+        if(isset($where[0]) && $where[0]){
+            $result = (!isset($where[1])) ? $where[0] : $this->buildWhere($where);
+        }
+		if($result !==null && $result){
+            $this->set('selector', $result);
+		}
+    return $this;
+    }
+
+    # @ QueryBuilderAbstractCouch
+    public function orderBy(...$orderby): self
+    {
+        $sort = [];
+        foreach ($orderby as $field) {
+            $direction = 'asc';
+            $field = strtolower($field);
+            if (strpos($field, ' desc') !== false) {
+                $field = str_replace(' desc', '', $field);
+                $direction = 'desc';
+            }
+            $sort[] = [$field => $direction];
+        }
+        $this->set('sort', $sort);
+        return $this;
+    }
+
+    # @ QueryBuilderAbstractCouch
+    public function limit(...$limit): self
+    {
+        if (isset($limit[1])) {
+            $this->set('skip', $limit[0]);
+            $this->set('limit', $limit[1]);
+        } else {
+            $this->set('limit', $limit[0]);
+        }
+        return $this;
+    }
+
+    # @ QueryBuilderAbstractCouch
+    public function useIndex(...$index): self
+    {
+        $this->set('use_index', $index);
+        return $this;
     }
 
     public function beginTransaction(): bool
@@ -283,35 +325,7 @@ class DbCouch extends QueryBuilderAbstractCouch implements DbInterface, ArrayAcc
 
     public function offsetSet($offset, $value): void
     {
-        // 증가 연산을 감지하여 처리
-        if (is_string($value) && preg_match("/^" . preg_quote($offset, '/') . "(\+|\-)[0-9]+$/", $value)) {
-            // '+1' 또는 '-1' 형식의 값 처리
-            $parts = explode(substr($value, strlen($offset), 1), $value);
-            $operator = substr($value, strlen($offset), 1);
-            $operand = intval($parts[1]);
-
-            // 현재 값을 가져와서 증가/감소 연산 수행
-            if (isset($this->params[$offset])) {
-                $currentValue = $this->params[$offset];
-                if (is_numeric($currentValue)) {
-                    $newValue = match ($operator) {
-                        '+' => $currentValue + $operand,
-                        '-' => $currentValue - $operand,
-                        default => $currentValue,
-                    };
-                    $this->params[$offset] = $newValue;
-                } else {
-                    // 초기값 설정 (예: 0)
-                    $this->params[$offset] = ($operator === '+') ? $operand : -$operand;
-                }
-            } else {
-                // 초기값 설정 (예: 0)
-                $this->params[$offset] = ($operator === '+') ? $operand : -$operand;
-            }
-        } else {
-            // 일반적인 값 설정
-            $this->params[$offset] = $value;
-        }
+        $this->params[$offset] = $value;
     }
 
 	# @ ArrayAccess

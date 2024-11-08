@@ -57,10 +57,17 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
         $model->block_limit  = 2;   // 페이지블록수
         $model->q            = $this->requested->q ?? '';   // 검색어
         $model->data         = [];
+        $model->where = null;
+
+        # where
+        $model->where = $this->db->whereHelper()->
+            begin('OR')->
+                case(TestEnum::TITLE(),"LIKE", $model->q)
+            ->where;
 
         # total record
-        $model->total_record = $this->db->table(R::tables('test'))->total();
-        Log::d("model->total_record",$model->total_record);
+        $model->total_record = $this->db->table(R::tables('test'))->where($model->where)->total();
+
         # pageing
         $paging = new Relation( totalRecord: $model->total_record, page: $model->page );
         $relation = $paging->query( pagecount: $model->page_count , blockLimit: $model->block_limit )->build()->paging();
@@ -73,6 +80,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
                 TestEnum::SIGNDATE(),
                 TestEnum::VIEW_COUNT()
             )
+            ->where($model->where)
             ->orderBy(TestEnum::ID().' DESC')
             ->limit($paging->qLimitStart, $paging->qLimitEnd)
             ->query();
@@ -115,7 +123,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
 
         # model
         $model = new Model($params);
-        $model->data         = [];
+        $model->data = [];
 
         # db
         try{
@@ -128,6 +136,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
         }catch(\Exception $e){
             $this->db->rollBack();
             Log::e($e->getMessage());
+            return JsonEncoder::toJson(["result"=>"false","msg"=>$e->getMessage()]);
         }
 
         # output
@@ -154,37 +163,31 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
         $model = new Model($params);
         $model->data = [];
 
-        Log::d($this->db->table( R::tables('test'))->where(TestEnum::ID(), $this->requested->id)->query);
-
         # check data db
-        // $model->data = $this->db->table( R::tables('test'))
-        //     ->where(TestEnum::ID(), $this->requested->id)
-        //     ->query()->fetch_assoc();
-        // if(!isset($model->data[TestEnum::ID()])){
-        //     return  JsonEncoder::toJson(["result"=>"false","msg_code"=>"e_db_unenabled", "msg"=>R::sysmsg('e_db_unenabled')]);
-        // }
+        $model->data = $this->db->table( R::tables('test'))
+            ->select('*')
+            ->where(TestEnum::ID(), $this->requested->id)
+            ->query()->fetch_assoc();
+        if(!isset($model->data[TestEnum::ID()])){
+            return  JsonEncoder::toJson(["result"=>"false","msg_code"=>"e_db_unenabled", "msg"=>R::sysmsg('e_db_unenabled')]);
+        }
 
-        // $where1 = $this->db->whereHelper
-        //     ->begin('OR') // 첫 번째 OR 그룹 시작
-        //         ->case('category', '=', 'dp00')
-        //         ->case('category', '=', 'dp01')
-        //     ->end() // 첫 번째 OR 그룹 종료
-        //     ->begin('OR') // 두 번째 OR 그룹 시작
-        //         ->case('title', 'LIKE', ['이순신', '대통령']) // LIKE 조건 처리
-        //     ->end() // 두 번째 OR 그룹 종료
-        //     ->where;
-        // Log::d($where1);
-
-        // # db
-        // try{
-        //     $this->db->beginTransaction();
-        //     $this->db[TestEnum::VIEW_COUNT()] = TestEnum::VIEW_COUNT()."+1";
-        //     $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->update();
-        //     $this->db->commit();
-        // }catch(\Exception $e){
-        //     $this->db->rollBack();
-        //     Log::e($e->getMessage());
-        // }
+        # db
+        try{
+            $this->db->beginTransaction();
+            if(isset($model->data['_rev'])){
+                $this->db['_rev']  = $model->data['_rev'];
+            }
+            $this->db[TestEnum::TITLE()]     = $model->data[TestEnum::TITLE()];
+            $this->db[TestEnum::SIGNDATE()]  = $model->data[TestEnum::SIGNDATE()];
+            $this->db[TestEnum::VIEW_COUNT()]= $model->data[TestEnum::VIEW_COUNT()]+1;
+            $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->update();
+            $this->db->commit();
+        }catch(\Exception $e){
+            $this->db->rollBack();
+            Log::e($e->getMessage());
+            return JsonEncoder::toJson(["result"=>"false","msg"=>$e->getMessage()]);
+        }
 
         # output
         return JsonEncoder::toJson([
@@ -213,6 +216,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
 
         # check data db
         $model->data = $this->db->table( R::tables('test'))
+            ->select('*')
             ->where(TestEnum::ID(), $this->requested->id)
             ->query()->fetch_assoc();
         if(!isset($model->data[TestEnum::ID()])){
@@ -220,15 +224,21 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
         }
 
         # db
-        // try{
-        //     $this->db->beginTransaction();
-        //     $this->db[TestEnum::TITLE()]  = $this->requested->title;
-        //     $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->update();
-        //     $this->db->commit();
-        // }catch(\Exception $e){
-        //     $this->db->rollBack();
-        //     Log::e($e->getMessage());
-        // }
+        try{
+            $this->db->beginTransaction();
+            if(isset($model->data['_rev'])){
+                $this->db['_rev']  = $model->data['_rev'];
+            }
+            $this->db[TestEnum::TITLE()]     = $this->requested->title;
+            $this->db[TestEnum::SIGNDATE()]  = $model->data[TestEnum::SIGNDATE()];
+            $this->db[TestEnum::VIEW_COUNT()]= $model->data[TestEnum::VIEW_COUNT()];
+            $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->update();
+            $this->db->commit();
+        }catch(\Exception $e){
+            $this->db->rollBack();
+            Log::e($e->getMessage());
+            return JsonEncoder::toJson(["result"=>"false","msg"=>$e->getMessage()]);
+        }
 
         # output
         return JsonEncoder::toJson([
@@ -245,7 +255,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
 
         # Validation
         try{
-            (new Validation('id', R::strings('id'),$this->requested->id))->null()->number();
+            (new Validation('id', R::strings('id'),$this->requested->id))->null()->disliking([]);
         }catch(\Exception $e){
             Log::e( $e->getMessage());
             return $e->getMessage();
@@ -257,6 +267,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
 
         # check data db
         $model->data = $this->db->table( R::tables('test'))
+            ->select(TestEnum::ID())
             ->where(TestEnum::ID(), $this->requested->id)
             ->query()->fetch_assoc();
         if(!isset($model->data[TestEnum::ID()])){
@@ -266,6 +277,9 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
         # db
         try{
             $this->db->beginTransaction();
+            if(isset($model->data['_rev'])){
+                $this->db['_rev']  = $model->data['_rev'];
+            }
             $this->db->table( R::tables('test') )->where(TestEnum::ID(), $this->requested->id)->delete();
             $this->db->commit();
         }catch(\Exception $e){

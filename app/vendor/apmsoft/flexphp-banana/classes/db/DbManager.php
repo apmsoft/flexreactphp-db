@@ -1,6 +1,7 @@
 <?php
 namespace Flex\Banana\Classes\Db;
 
+use Flex\Banana\Classes\Log;
 use \ReflectionClass;
 use \Exception;
 use \ArrayAccess;
@@ -60,7 +61,7 @@ class DbManager implements ArrayAccess
                 return $method->invokeArgs($this->processor, $arguments);
             }
         }
-        
+
         // 프로세서의 __call 메소드 호출
         if ($reflection->hasMethod('__call')) {
             return $this->processor->__call($name, $arguments);

@@ -47,7 +47,6 @@ class HttpRequest {
 
     private function execute(string $method, callable $callback) 
     {
-        print_r($this->urls);
         $response = [];
         foreach ($this->urls as $idx => $url) {
             $ch[$idx] = curl_init($url['url']);
@@ -126,7 +125,7 @@ class HttpRequest {
             $callback($response);
         }
 
-        $this->urls = []; // Clear URLs after execution
+        $this->urls = [];
         return $response;
     }
 

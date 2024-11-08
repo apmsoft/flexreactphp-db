@@ -4,7 +4,6 @@ namespace Flex\Banana\Classes\Db;
 use Flex\Banana\Classes\Db\QueryBuilderAbstractSql;
 use Flex\Banana\Classes\Db\DbResultSql;
 use Flex\Banana\Classes\Db\DbInterface;
-use Flex\Banana\Classes\Db\WhereHelper;
 use \PDO;
 use \PDOException;
 use \Exception;
@@ -23,8 +22,10 @@ class DbPgSql extends QueryBuilderAbstractSql implements DbInterface,ArrayAccess
     ];
 
 	public function __construct(
-		public WhereHelper $whereHelper
-	){}
+		WhereSql $whereSql
+	){
+		parent::__construct($whereSql);
+	}
 
 	# @ DbSqlInterface
     public function connect(string $host, string $dbname, string $user, string $password, int $port, string $charset, ?array $options=[]) : self
@@ -54,6 +55,12 @@ class DbPgSql extends QueryBuilderAbstractSql implements DbInterface,ArrayAccess
 		}
 	return $this;
 	}
+
+	# @ DbSqlInterface
+	public function whereHelper(): WhereSql
+    {
+        return $this->whereSql;
+    }
 
 	# @ DbSqlInterface
 	public function query(string $query = '', array $params = []): DbResultSql
@@ -131,8 +138,6 @@ class DbPgSql extends QueryBuilderAbstractSql implements DbInterface,ArrayAccess
 
 		foreach ($this->params as $field => $value) {
 			if (is_string($value) && str_contains($value, 'encode(')) {
-				$setClauses[] = "$field = $value";
-			}else if (is_string($value) && preg_match("/^$field(\+|\-|\*|\/)[0-9]+$/", $value)) {
 				$setClauses[] = "$field = $value";
 			}else {
 				$setClauses[] = "$field = :$field";

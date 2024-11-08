@@ -9,8 +9,6 @@ use Flex\Banana\Utils\Requested;
 
 use Flex\Banana\Classes\Db\DbManager;
 use Flex\Banana\Adapters\DbAdapter;
-use Flex\Banana\Classes\Db\WhereHelper;
-use Flex\Banana\Classes\Db\WhereSql;
 
 class Db2 extends DbAdapter
 {
@@ -18,7 +16,7 @@ class Db2 extends DbAdapter
         private Requested $requested,
         DbManager $db
     ) {
-        parent::__construct(db: $db, whereHelper: new WhereHelper(new WhereSql()));
+        parent::__construct(db: $db);
     }
 
     # Distinct

@@ -2,7 +2,6 @@
 use React\Http\Message\Response;
 use Psr\Http\Message\ServerRequestInterface;
 
-use Flex\Banana\Classes\App;
 use Flex\Banana\Classes\Log;
 use Flex\Banana\Classes\R;
 use Flex\Banana\Classes\Json\JsonEncoder;
@@ -11,7 +10,6 @@ use Flex\Banana\Classes\Db\DbManager;
 use Flex\Banana\Classes\Db\DbMySql;
 use Flex\Banana\Classes\Db\DbPgSql;
 use Flex\Banana\Classes\Db\DbCouch;
-use Flex\Banana\Classes\Db\WhereHelper;
 use Flex\Banana\Classes\Db\WhereSql;
 use Flex\Banana\Classes\Db\WhereCouch;
 use Flex\Banana\Classes\Db\DbCipherGeneric;
@@ -48,15 +46,15 @@ $allowedIps = ['192.168.65.1']; // 허용 IP 주소
 $browser = new React\Http\Browser();
 
 # mysql
-$mysql = new DbManager(new DbMySql(new WhereHelper(new WhereSql())));
+$mysql = new DbManager(new DbMySql(new WhereSql()));
 $mysql->connect(host: DB_HOST, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT, charset: "utf8");
 
 # pgsql
-$pgsql = new DbManager(new DbPgSql(new WhereHelper(new WhereSql())));
+$pgsql = new DbManager(new DbPgSql(new WhereSql()));
 $pgsql->connect(host: DB_HOST2, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT2, charset:"utf8");
 
 # CouchDB
-$couchdb = new DbManager(new DbCouch(new WhereHelper(new WhereCouch())));
+$couchdb = new DbManager(new DbCouch(new WhereCouch()));
 $couchdb->connect(host:DB_HOST3, dbname: DB_NAME, user: DB_USERID, password: DB_PASSWORD, port: DB_PORT3, charset:"utf8");
 
 # router
@@ -172,64 +170,64 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
     });
 
     # Sub Query
-    // $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$pgsql)
-    // {
-    //     $r->addRoute('POST', '/mysql/subquery', function(Requested $requested) use ($mysql): string {
-    //         return  (new \My\Service\Test\Db2($requested, $mysql))->doSubQuery();
-    //     });
-    //     $r->addRoute('POST', '/pgsql/subquery', function(Requested $requested) use ($pgsql): string {
-    //         return  (new \My\Service\Test\Db2($requested, $pgsql))->doSubQuery();
-    //     });
-    // });
+    $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$pgsql)
+    {
+        $r->addRoute('POST', '/mysql/subquery', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db2($requested, $mysql))->doSubQuery();
+        });
+        $r->addRoute('POST', '/pgsql/subquery', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db2($requested, $pgsql))->doSubQuery();
+        });
+    });
 
     # Db Aes Encrypt/Decrypt
-    // $r->addGroup('/db/cipher', function (FastRoute\RouteCollector $r) use ($mysql,$pgsql)
-    // {
-    //     # mysql
-    //     $r->addRoute('POST', '/mysql/list', function(Requested $requested) use ($mysql): string {
-    //         return  (new \My\Service\Test\Db3($requested, $mysql,
-    //         new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
-    //         ))->doList();
-    //     });
-    //     $r->addRoute('POST', '/mysql/insert', function(Requested $requested) use ($mysql): string {
-    //         return  (new \My\Service\Test\Db3($requested, $mysql,
-    //             new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
-    //         ))->doInsert();
-    //     });
-    //     $r->addRoute('POST', '/mysql/edit', function(Requested $requested) use ($mysql): string {
-    //         return  (new \My\Service\Test\Db3($requested, $mysql,
-    //         new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
-    //         ))->doEdit();
-    //     });
-    //     $r->addRoute('POST', '/mysql/update', function(Requested $requested) use ($mysql): string {
-    //         return  (new \My\Service\Test\Db3($requested, $mysql,
-    //         new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
-    //         ))->doUpdate();
-    //     });
+    $r->addGroup('/db/cipher', function (FastRoute\RouteCollector $r) use ($mysql,$pgsql)
+    {
+        # mysql
+        $r->addRoute('POST', '/mysql/list', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db3($requested, $mysql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
+            ))->doList();
+        });
+        $r->addRoute('POST', '/mysql/insert', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db3($requested, $mysql,
+                new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
+            ))->doInsert();
+        });
+        $r->addRoute('POST', '/mysql/edit', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db3($requested, $mysql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
+            ))->doEdit();
+        });
+        $r->addRoute('POST', '/mysql/update', function(Requested $requested) use ($mysql): string {
+            return  (new \My\Service\Test\Db3($requested, $mysql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherMysqlAes256Cbc(DB_HASH_KEY, $mysql))
+            ))->doUpdate();
+        });
 
-    //     # pgsql
-    //     $r->addRoute('POST', '/pgsql/list', function(Requested $requested) use ($pgsql): string {
-    //         return  (new \My\Service\Test\Db3($requested, $pgsql,
-    //         new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
-    //         ))->doList();
-    //     });
-    //     $r->addRoute('POST', '/pgsql/insert', function(Requested $requested) use ($pgsql): string {
-    //         return  (new \My\Service\Test\Db3($requested, $pgsql,
-    //         new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
-    //         ))->doInsert();
-    //     });
-    //     $r->addRoute('POST', '/pgsql/edit', function(Requested $requested) use ($pgsql): string {
-    //         return  (new \My\Service\Test\Db3($requested, $pgsql,
-    //         new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
-    //         ))->doEdit();
-    //     });
-    //     $r->addRoute('POST', '/pgsql/update', function(Requested $requested) use ($pgsql): string {
-    //         return  (new \My\Service\Test\Db3($requested, $pgsql,
-    //         new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
-    //         ))->doUpdate();
-    //     });
+        # pgsql
+        $r->addRoute('POST', '/pgsql/list', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db3($requested, $pgsql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
+            ))->doList();
+        });
+        $r->addRoute('POST', '/pgsql/insert', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db3($requested, $pgsql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
+            ))->doInsert();
+        });
+        $r->addRoute('POST', '/pgsql/edit', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db3($requested, $pgsql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
+            ))->doEdit();
+        });
+        $r->addRoute('POST', '/pgsql/update', function(Requested $requested) use ($pgsql): string {
+            return  (new \My\Service\Test\Db3($requested, $pgsql,
+            new DbCipherGeneric(new \Flex\Banana\Classes\Db\CipherPgsqlAes256Cbc( DB_HASH_KEY))
+            ))->doUpdate();
+        });
 
-    // });
+    });
 });
 
 

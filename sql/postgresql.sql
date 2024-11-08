@@ -42,7 +42,7 @@ INSERT INTO orders (customer_id, product, amount) VALUES
 # CREATE EXTENSION IF NOT EXISTS pgcrypto;
 # 암호화 테스트용
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
+    _id SERIAL PRIMARY KEY,
     username VARCHAR(200) NOT NULL,
     email VARCHAR(200) NOT NULL,
     passwd VARCHAR(255) NOT NULL
