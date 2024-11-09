@@ -92,7 +92,7 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/couchdb/insert
 Content-Type:{{C_TYPE}}
 
-{"title" : "테스트13"}
+{"title" : "테스트14"}
 
 ### CouchDB edit
 POST {{HOST}}/db/couchdb/edit
@@ -106,7 +106,7 @@ Content-Type:{{C_TYPE}}
 
 {
     "id" :"9d7d39c222c2b027e4ad1d25ac001830", 
-    "title" : "테스트 업데이트4ㄴㄴㄴㄴ"
+    "title" : "테스트 업데이트4----"
 }
 
 ### CouchDB delete
@@ -137,7 +137,7 @@ Content-Type:{{C_TYPE}}
 {
     "id1":"9d7d39c222c2b027e4ad1d25ac0074de",
     "id2":"9d7d39c222c2b027e4ad1d25ac001830",
-    "title" : "테스트 멀티업데이트 ㅇㅇㅇㅇ"
+    "title" : "테스트 멀티업데이트 AAAA"
 }
 
 
@@ -193,7 +193,7 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/cipher/mysql/insert
 Content-Type:{{C_TYPE}}
 
-{"username":"이름명2", "email":"test1@test.com", "passwd":"passwd12#$"}
+{"username":"이름명AAAA", "email":"test1@test.com", "passwd":"passwd12#$"}
 
 ### MYSQL edit
 POST {{HOST}}/db/cipher/mysql/edit
@@ -221,7 +221,7 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/cipher/pgsql/insert
 Content-Type:{{C_TYPE}}
 
-{"username":"이름명1", "email":"test1@test.com", "passwd":"passwd12#$"}
+{"username":"이름명AAAA", "email":"test1@test.com", "passwd":"passwd12#$"}
 
 ### POSTGRES edit
 POST {{HOST}}/db/cipher/pgsql/edit
