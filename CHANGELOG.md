@@ -1,10 +1,14 @@
 # < 현재 버전 >
 ## -version-code : 3
-## -version-name : v0.1.8
+## -version-name : v0.2.0
 
 
 # dev-main
 -
+
+# v0.2.0
+- CouchDB 관련 멀티 쿼리, 등록, 업데이트, 삭제 포함 기능
+- flexphp-banana v3.1.1 최신버전 업데이트 적용
 
 # v0.1.8
 - CouchDB 관련 sql/couchdb.txt 추가

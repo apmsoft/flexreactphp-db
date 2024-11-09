@@ -136,6 +136,20 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
         });
     });
 
+    # couchdb 멀티 쿼리 테스트
+    $r->addGroup('/db/couchdb2', function (FastRoute\RouteCollector $r) use ($couchdb)
+    {
+        $r->addRoute('POST', '/list', function(Requested $requested) use ($couchdb): string {
+            return  (new \My\Service\Test\DbCouchMulti($requested, $couchdb))->doList();
+        });
+        $r->addRoute('POST', '/insert', function(Requested $requested) use ($couchdb): string {
+            return  (new \My\Service\Test\DbCouchMulti($requested, $couchdb))->doInsert();
+        });
+        $r->addRoute('POST', '/update', function(Requested $requested) use ($couchdb): string {
+            return  (new \My\Service\Test\DbCouchMulti($requested, $couchdb))->doUpdate();
+        });
+    });
+
     # Distinct
     $r->addGroup('/db', function (FastRoute\RouteCollector $r) use ($mysql,$pgsql)
     {

@@ -2,23 +2,23 @@
     "packages": [
         {
             "name": "apmsoft/flexphp-banana",
-            "version": "v3.1.0",
-            "version_normalized": "3.1.0.0",
+            "version": "v3.1.1",
+            "version_normalized": "3.1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apmsoft/flexphp-banana.git",
-                "reference": "1d4b4b9edbeaf020ee8702849ed14fa5a2911f6f"
+                "reference": "536d05896d02dff8aa10dc02a91e0c3644447ea5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apmsoft/flexphp-banana/zipball/1d4b4b9edbeaf020ee8702849ed14fa5a2911f6f",
-                "reference": "1d4b4b9edbeaf020ee8702849ed14fa5a2911f6f",
+                "url": "https://api.github.com/repos/apmsoft/flexphp-banana/zipball/536d05896d02dff8aa10dc02a91e0c3644447ea5",
+                "reference": "536d05896d02dff8aa10dc02a91e0c3644447ea5",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1"
             },
-            "time": "2024-11-08T08:15:58+00:00",
+            "time": "2024-11-09T08:19:02+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -46,7 +46,7 @@
             "homepage": "http://flexphp.fancyupsoft.com",
             "support": {
                 "issues": "https://github.com/apmsoft/flexphp-banana/issues",
-                "source": "https://github.com/apmsoft/flexphp-banana/tree/v3.1.0"
+                "source": "https://github.com/apmsoft/flexphp-banana/tree/v3.1.1"
             },
             "install-path": "../apmsoft/flexphp-banana"
         },

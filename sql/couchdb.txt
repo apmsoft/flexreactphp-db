@@ -1,6 +1,15 @@
 1. _users 데이터 베이스 생성
-2. flex_test 데이터 베이스 생성
-3. flex_test 데이터 베이스 index key 생성
+2. test_db 데이터 베이스 생성
+3. index key 생성
+{
+   "index": {
+      "fields": [
+         "type","_id"
+      ]
+   },
+   "name": "type_id-json-index",
+   "type": "json"
+}
 {
    "index": {
       "fields": [
@@ -8,5 +17,14 @@
       ]
    },
    "name": "_id-json-index",
+   "type": "json"
+}
+{
+   "index": {
+      "fields": [
+         "type"
+      ]
+   },
+   "name": "type-json-index",
    "type": "json"
 }

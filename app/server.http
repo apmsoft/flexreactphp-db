@@ -92,20 +92,20 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/couchdb/insert
 Content-Type:{{C_TYPE}}
 
-{"title" : "테스트"}
+{"title" : "테스트13"}
 
 ### CouchDB edit
 POST {{HOST}}/db/couchdb/edit
 Content-Type:{{C_TYPE}}
 
-{"id" : "fbfb492a74f22cb3a7615ca25e007fc8"}
+{"id" : "9d7d39c222c2b027e4ad1d25ac001830"}
 
 ### CouchDB update
 POST {{HOST}}/db/couchdb/update
 Content-Type:{{C_TYPE}}
 
 {
-    "id" :"fbfb492a74f22cb3a7615ca25e007fc8", 
+    "id" :"9d7d39c222c2b027e4ad1d25ac001830", 
     "title" : "테스트 업데이트4"
 }
 
@@ -113,9 +113,32 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/couchdb/delete
 Content-Type:{{C_TYPE}}
 
-{"id" : "fbfb492a74f22cb3a7615ca25e007eb2"}
+{"id" : "fbfb492a74f22cb3a7615ca25e00975d"}
 
 
+##### [ CouchDB Multi Query ] #########
+### CouchDB Multi List
+POST {{HOST}}/db/couchdb2/list
+Content-Type:{{C_TYPE}}
+
+{}
+
+### CouchDB Multi insert
+POST {{HOST}}/db/couchdb2/insert
+Content-Type:{{C_TYPE}}
+
+{"title" : "테스트 멀티테스트5"}
+
+
+### CouchDB Multi update
+POST {{HOST}}/db/couchdb2/update
+Content-Type:{{C_TYPE}}
+
+{
+    "id1":"9d7d39c222c2b027e4ad1d25ac0074de",
+    "id2":"9d7d39c222c2b027e4ad1d25ac006c45",
+    "title" : "테스트 멀티업데이트 38"
+}
 
 
 ##### Distinct
