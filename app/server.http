@@ -106,7 +106,7 @@ Content-Type:{{C_TYPE}}
 
 {
     "id" :"9d7d39c222c2b027e4ad1d25ac001830", 
-    "title" : "테스트 업데이트4"
+    "title" : "테스트 업데이트4ㄴㄴㄴㄴ"
 }
 
 ### CouchDB delete
@@ -127,7 +127,7 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/couchdb2/insert
 Content-Type:{{C_TYPE}}
 
-{"title" : "테스트 멀티테스트5"}
+{"title" : "테스트 멀티테스트6"}
 
 
 ### CouchDB Multi update
@@ -136,8 +136,8 @@ Content-Type:{{C_TYPE}}
 
 {
     "id1":"9d7d39c222c2b027e4ad1d25ac0074de",
-    "id2":"9d7d39c222c2b027e4ad1d25ac006c45",
-    "title" : "테스트 멀티업데이트 38"
+    "id2":"9d7d39c222c2b027e4ad1d25ac001830",
+    "title" : "테스트 멀티업데이트 ㅇㅇㅇㅇ"
 }
 
 
