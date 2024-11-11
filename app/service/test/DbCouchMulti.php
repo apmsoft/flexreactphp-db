@@ -152,8 +152,8 @@ class DbCouchMulti extends DbAdapter implements ListInterface,UpdateInterface,In
 
         # Validation
         try{
-            (new Validation('id1', R::strings('id'),$this->requested->id1))->null()->disliking([]);
-            (new Validation('id2', R::strings('id'),$this->requested->id2))->null()->disliking([]);
+            (new Validation('id1', R::strings('id'),$this->requested->id1))->null()->disliking(["_",":","-"]);
+            (new Validation('id2', R::strings('id'),$this->requested->id2))->null()->disliking(["_",":","-"]);
             (new Validation('title', R::strings('title'),$this->requested->title))->null()->disliking([]);
         }catch(\Exception $e){
             Log::e( $e->getMessage());

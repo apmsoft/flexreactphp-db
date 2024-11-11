@@ -153,7 +153,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
 
         # Validation
         try{
-            (new Validation('id', R::strings('id'),$this->requested->id))->null()->disliking([]);
+            (new Validation('id', R::strings('id'),$this->requested->id))->null()->disliking(["_",":","-"]);
         }catch(\Exception $e){
             Log::e( $e->getMessage());
             return $e->getMessage();
@@ -203,7 +203,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
 
         # Validation
         try{
-            (new Validation('id', R::strings('id'),$this->requested->id))->null()->disliking([]);
+            (new Validation('id', R::strings('id'),$this->requested->id))->null()->disliking(["_",":","-"]);
             (new Validation('title', R::strings('title'),$this->requested->title))->null();
         }catch(\Exception $e){
             Log::e( $e->getMessage());
@@ -255,7 +255,7 @@ class Db extends DbAdapter implements ListInterface,EditUpdateInterface,InsertIn
 
         # Validation
         try{
-            (new Validation('id', R::strings('id'),$this->requested->id))->null()->disliking([]);
+            (new Validation('id', R::strings('id'),$this->requested->id))->null()->disliking(["_",":","-"]);
         }catch(\Exception $e){
             Log::e( $e->getMessage());
             return $e->getMessage();

@@ -2,29 +2,11 @@
 2. test_db 데이터 베이스 생성
 3. index key 생성
 {
-   "index": {
-      "fields": [
-         "type","_id"
-      ]
-   },
-   "name": "type_id-json-index",
-   "type": "json"
-}
-{
-   "index": {
-      "fields": [
-         "_id"
-      ]
-   },
-   "name": "_id-json-index",
-   "type": "json"
-}
-{
-   "index": {
-      "fields": [
-         "type"
-      ]
-   },
-   "name": "type-json-index",
-   "type": "json"
+  "index": {
+    "fields": [
+      { "_id": "desc" }
+    ]
+  },
+  "name": "_id-json-index",
+  "type": "json"
 }

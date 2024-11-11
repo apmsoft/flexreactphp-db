@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b9b5180214db8d75f35ee47d564440be",
+    "content-hash": "84dacf968d7ff12b88a1a74611f7aca4",
     "packages": [
         {
             "name": "apmsoft/flexphp-banana",
-            "version": "v3.1.2",
+            "version": "v3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/apmsoft/flexphp-banana.git",
-                "reference": "9f09cb46aca41f542608cd1261c8e760f3d41d25"
+                "reference": "50aab656e6a48031b457c19be75b726a2f265b9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apmsoft/flexphp-banana/zipball/9f09cb46aca41f542608cd1261c8e760f3d41d25",
-                "reference": "9f09cb46aca41f542608cd1261c8e760f3d41d25",
+                "url": "https://api.github.com/repos/apmsoft/flexphp-banana/zipball/50aab656e6a48031b457c19be75b726a2f265b9e",
+                "reference": "50aab656e6a48031b457c19be75b726a2f265b9e",
                 "shasum": ""
             },
             "require": {
@@ -49,9 +49,9 @@
             "homepage": "http://flexphp.fancyupsoft.com",
             "support": {
                 "issues": "https://github.com/apmsoft/flexphp-banana/issues",
-                "source": "https://github.com/apmsoft/flexphp-banana/tree/v3.1.2"
+                "source": "https://github.com/apmsoft/flexphp-banana/tree/v3.1.3"
             },
-            "time": "2024-11-09T11:52:41+00:00"
+            "time": "2024-11-11T02:43:09+00:00"
         },
         {
             "name": "evenement/evenement",
@@ -880,10 +880,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

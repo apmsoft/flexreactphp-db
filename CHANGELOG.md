@@ -1,10 +1,14 @@
 # < 현재 버전 >
 ## -version-code : 3
-## -version-name : v0.2.1
+## -version-name : v0.2.2
 
 
 # dev-main
 - 최종 테스트
+
+# v0.2.2
+- flexphp-banana v3.1.3 최신버전 업데이트 적용
+- 최신 버전 적용에 따른 테스트 및 프로그램 업데이트
 
 # v0.2.1
 - CouchDB 멀티 등록, 업데이트, 삭제 최적화 향상 적용 된 flexphp-banana v3.1.2 최신버전 업데이트 적용

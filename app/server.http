@@ -98,14 +98,14 @@ Content-Type:{{C_TYPE}}
 POST {{HOST}}/db/couchdb/edit
 Content-Type:{{C_TYPE}}
 
-{"id" : "9d7d39c222c2b027e4ad1d25ac001830"}
+{"id" : "flex_test:20241111112006413170-489793"}
 
 ### CouchDB update
 POST {{HOST}}/db/couchdb/update
 Content-Type:{{C_TYPE}}
 
 {
-    "id" :"9d7d39c222c2b027e4ad1d25ac001830", 
+    "id" :"flex_test:20241111112006413170-489793", 
     "title" : "테스트 업데이트4----"
 }
 
@@ -135,8 +135,8 @@ POST {{HOST}}/db/couchdb2/update
 Content-Type:{{C_TYPE}}
 
 {
-    "id1":"9d7d39c222c2b027e4ad1d25ac0074de",
-    "id2":"9d7d39c222c2b027e4ad1d25ac001830",
+    "id1":"flex_test:20241111113651733027-141790",
+    "id2":"flex_test:20241111113651732569-171535",
     "title" : "테스트 멀티업데이트 AAAA"
 }
 
