@@ -1,3 +1,9 @@
+# Fauxton CouchDB 클라이언트 프로그램 다운로드 설치
+https://couchdb.apache.org/#download
+
+# 접속 경로
+http://127.0.0.1:59840/_utils/#login
+
 1. _users 데이터 베이스 생성
 2. test_db 데이터 베이스 생성 (*파티션 옵션 선택)
 3. index key 생성
