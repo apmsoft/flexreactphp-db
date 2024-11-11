@@ -1,5 +1,5 @@
 1. _users 데이터 베이스 생성
-2. test_db 데이터 베이스 생성
+2. test_db 데이터 베이스 생성 (*파티션 옵션 선택)
 3. index key 생성
 {
   "index": {
