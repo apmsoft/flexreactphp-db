@@ -1,10 +1,13 @@
 # < 현재 버전 >
 ## -version-code : 4
-## -version-name : v0.2.3
+## -version-name : v0.2.4
 
 
 # dev-main
 - 최종 테스트
+
+# v0.2.4
+- mysql yml BUG FETCH
 
 # v0.2.3
 - flexphp-banana v3.1.4 최신버전 업데이트 적용
