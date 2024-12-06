@@ -4,7 +4,7 @@
 
 
 # dev-main
-- 최종 테스트
+- sql/mysql.sql, postgresql.sql 수정
 
 # v0.2.4
 - mysql yml BUG FETCH

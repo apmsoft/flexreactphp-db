@@ -1,5 +1,5 @@
 # 일반 테스트용 
-CREATE TABLE public.flex_test (
+CREATE TABLE flex_test (
 	_id serial4 NOT NULL,
 	signdate timestamp NOT NULL,
 	title varchar(45) NOT NULL,
