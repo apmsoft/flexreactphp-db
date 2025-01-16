@@ -23,24 +23,15 @@ services:
         limits:
           cpus: 0.4
           memory: 4G
-        reservations:
-          cpus: 0.2
-          memory: 2G
+        # reservations:
+        #   cpus: 0.2
+        #   memory: 2G
       replicas: 1
       update_config:
         parallelism: 2
         delay: 10s
       restart_policy:
         condition: on-failure
-    logging:
-      driver: json-file
-      options:
-        max-size: "5m"
-        max-file: "5"
-        compress: "true"
-        tag: "{{.Name}}"
-        labels: "production"
-        env: "os"
     restart: always
     depends_on:
       flexreactphp-mysql:
