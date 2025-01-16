@@ -18,8 +18,6 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
     volumes:
       - ./app:/app
-    mem_limit: 4G
-    cpus: 0.4
     deploy:
       resources:
         limits:
@@ -63,25 +61,14 @@ services:
     volumes:
       - ./init-mysql:/etc/mysql/conf.d/mysql.cnf
       - flexreactphp-mysql-data:/var/lib/mysql
-    mem_limit: 2G
-    cpus: 0.2
     deploy:
       resources:
         limits:
           cpus: 0.2
           memory: 2G
-        reservations:
-          cpus: 0.2
-          memory: 1G
-    logging:
-      driver: json-file
-      options:
-        max-size: "5m"
-        max-file: "5"
-        compress: "true"
-        tag: "{{.Name}}"
-        labels: "production"
-        env: "os"
+        # reservations:
+        #   cpus: 0.2
+        #   memory: 1G
     ports:
       - "3336:3306"
     networks:
@@ -111,18 +98,9 @@ services:
         limits:
           cpus: 0.2
           memory: 2G
-        reservations:
-          cpus: 0.2
-          memory: 1G
-    logging:
-      driver: json-file
-      options:
-        max-size: "5m"
-        max-file: "5"
-        compress: "true"
-        tag: "{{.Name}}"
-        labels: "production"
-        env: "os"
+        # reservations:
+        #   cpus: 0.2
+        #   memory: 1G
     ports:
       - "54320:5432"
     networks:
@@ -145,25 +123,14 @@ services:
       - "59840:5984"
     networks:
       - flexreactphp-network
-    mem_limit: 2G
-    cpus: 0.2
     deploy:
       resources:
         limits:
           cpus: 0.2
           memory: 2G
-        reservations:
-          cpus: 0.1
-          memory: 1G
-    logging:
-      driver: json-file
-      options:
-        max-size: "5m"
-        max-file: "5"
-        compress: "true"
-        tag: "{{.Name}}"
-        labels: "production"
-        env: "os"
+        # reservations:
+        #   cpus: 0.1
+        #   memory: 1G
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5984"]
