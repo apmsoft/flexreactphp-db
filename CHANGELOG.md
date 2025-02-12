@@ -1,6 +1,6 @@
 # < 현재 버전 >
-## -version-code : 5
-## -version-name : v0.2.5
+## -version-code : 4
+## -version-name : v0.2.4
 
 
 # dev-main
