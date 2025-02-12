@@ -1,13 +1,15 @@
 # < 현재 버전 >
-## -version-code : 4
-## -version-name : v0.2.4
+## -version-code : 5
+## -version-name : v0.2.5
 
 
 # dev-main
-- sql/mysql.sql, postgresql.sql 수정
+
 
 # v0.2.4
 - mysql yml BUG FETCH
+- sql/mysql.sql, postgresql.sql 수정
+- flexphp-banana v3.1.5 로 변경
 
 # v0.2.3
 - flexphp-banana v3.1.4 최신버전 업데이트 적용
