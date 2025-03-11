@@ -31,11 +31,6 @@ RUN composer install --no-scripts --no-autoloader --prefer-dist
 # Copy the rest of the application files
 COPY ./app .
 
-# Generate autoloader and install dependencies
-RUN composer clear-cache
-RUN composer install --no-dev
-RUN composer dump-autoload --optimize
-
 # Create custom php.ini
 RUN echo "display_errors = On" > /usr/local/etc/php/conf.d/custom.ini \
     && echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/custom.ini \
@@ -49,9 +44,6 @@ RUN echo "display_errors = On" > /usr/local/etc/php/conf.d/custom.ini \
     && echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/custom.ini \
     && echo "opcache.jit_buffer_size=100M" >> /usr/local/etc/php/conf.d/custom.ini \
     && echo "opcache.jit=1255" >> /usr/local/etc/php/conf.d/custom.ini
-
-# Create error log file and set permissions
-RUN touch /var/log/php_errors.log && chmod 666 /var/log/php_errors.log
 
 # Expose the port the application runs on
 EXPOSE 80
