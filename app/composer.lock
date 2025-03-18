@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/apmsoft/flexphp-banana.git",
-                "reference": "0275498b16460f611fb10dde910edd21d0179549"
+                "reference": "e75fb5a3eab033632dff85af430b99b941162190"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apmsoft/flexphp-banana/zipball/0275498b16460f611fb10dde910edd21d0179549",
-                "reference": "0275498b16460f611fb10dde910edd21d0179549",
+                "url": "https://api.github.com/repos/apmsoft/flexphp-banana/zipball/e75fb5a3eab033632dff85af430b99b941162190",
+                "reference": "e75fb5a3eab033632dff85af430b99b941162190",
                 "shasum": ""
             },
             "require": {
@@ -51,7 +51,7 @@
                 "issues": "https://github.com/apmsoft/flexphp-banana/issues",
                 "source": "https://github.com/apmsoft/flexphp-banana/tree/v3.1.5"
             },
-            "time": "2025-02-12T03:19:53+00:00"
+            "time": "2025-03-18T04:49:31+00:00"
         },
         {
             "name": "evenement/evenement",
