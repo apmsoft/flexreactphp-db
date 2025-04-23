@@ -1,0 +1,40 @@
+<?php
+namespace Columns;
+
+use Flex\Banana\Traits\EntryArrayTrait;
+use Flex\Banana\Traits\EnumInstanceTrait;
+use Flex\Banana\Interfaces\EnumInterface;
+use Flex\Banana\Traits\NullableValidationTrait;
+
+use Flex\Banana\Classes\R;
+
+# 이름
+enum NameEnum: string implements EnumInterface
+{
+    # 기본필수옵션
+    use EnumInstanceTrait;
+    use EntryArrayTrait;
+    use NullableValidationTrait;
+
+    case NAME = 'name';
+
+    public function filter(mixed $data = null, ...$params): mixed
+    {
+        return $data;
+    }
+
+    public function format(mixed $data = null, ...$params): mixed
+    {
+        return $data;
+    }
+
+    /*try {
+        NameEnum::NAME->validate("a");
+    } catch (\Exception $e) {
+    }*/
+    public function validate(mixed $data = null, ...$params): void
+    {
+        $validation = $this->checkNullOptional($this->value, R::strings($this->value), $data, $params[0] ?? 'required' );
+        $validation->length(2, 12)->space()->disliking([]);
+    }
+}
